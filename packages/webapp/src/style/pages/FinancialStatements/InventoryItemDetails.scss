@@ -1,0 +1,40 @@
+.financial-sheet {
+  &--inventory-item-details {
+    width: 100%;
+
+    .financial-sheet__table {
+
+      .tbody,
+      .thead {
+
+        .tr .td.transaction_id~.td,
+        .tr .th.transaction_id~.th {
+          text-align: right;
+        }
+      }
+
+      .tbody {
+       
+    }
+  }
+}
+
+.number-format-dropdown {
+  .toggles-fields {
+    .bp4-form-group:first-child {
+      display: none;
+    }
+  }
+
+  .form-group--money-format {
+    display: none;
+  }
+}
+
+.financial-statement--inventory-details {
+  .financial-header-drawer {
+    .bp4-drawer {
+      max-height: 350px;
+    }
+  }
+}

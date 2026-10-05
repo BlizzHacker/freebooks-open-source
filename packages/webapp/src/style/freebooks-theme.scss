@@ -1,0 +1,908 @@
+/* FreeBooks visual system */
+:root {
+  --color-primary: #0d9b82;
+  --color-app-body: #f2f6f7;
+  --color-dashboard-insider-background: #f2f6f7;
+  --color-dashboard-topbar-background: rgba(255, 255, 255, 0.94);
+  --color-dashboard-topbar-border-color: #e1e9e9;
+  --color-dashboard-fallback-loading-background: #f2f6f7;
+  --color-dashboard-datatable-background: #fff;
+  --color-dashboard-datatable-border: #e1e9e9;
+  --color-dashboard-card-background: #fff;
+  --color-dashboard-card-border: #e1e9e9;
+  --color-dashboard-navbar-item-text: #233b48;
+  --color-dashboard-navbar-item-hover-text: #0a7565;
+  --color-dashboard-navbar-item-hover-background: #e9f5f2;
+  --color-dashboard-navbar-item-active-text: #0a7565;
+  --color-dashboard-navbar-item-active-background: #e9f5f2;
+  --color-dashboard-navbar-item-icon: #52716f;
+  --color-dashboard-topbar-title-text: #173444;
+  --color-dashboard-actionsbar-border: #e1e9e9;
+  --color-dashboard-actionsbar-divider: #d9e5e4;
+  --color-datatable-head-background: #f2f7f6;
+  --color-datatable-head-text: #48615f;
+  --color-datatable-head-border: #e1e9e9;
+  --color-datatable-cell-hover-background: #f5faf9;
+  --color-datatable-cell-border: #e7eeee;
+  --color-sidebar-background: #09283a;
+  --color-sidebar-menu-item-text: #d9e7e9;
+  --color-sidebar-menu-item-hover-background: rgba(255, 255, 255, 0.08);
+  --color-sidebar-menu-item-text-hover: #fff;
+  --color-sidebar-menu-item-active-background: rgba(46, 201, 170, 0.14);
+  --color-sidebar-menu-item-active-text: #72e2c5;
+  --color-sidebar-menu-item-focus-background: rgba(46, 201, 170, 0.2);
+  --color-sidebar-menu-label-color: #8aa6ac;
+  --color-sidebar-toggle: #73949c;
+  --color-bank-account-card-background: #fff;
+  --color-bank-account-card-text: #173444;
+  --color-bank-account-card-border: #dce7e6;
+  --color-bank-account-card-hover-border: #0d9b82;
+}
+body.bp4-dark {
+  --color-primary: #4bd4b2;
+  --color-app-body: #071a29;
+  --color-dashboard-insider-background: #0a2030;
+  --color-dashboard-topbar-background: #0b2233;
+  --color-dashboard-topbar-border-color: rgba(180, 215, 218, 0.12);
+  --color-dashboard-fallback-loading-background: #0a2030;
+  --color-dashboard-datatable-background: #0d2638;
+  --color-dashboard-datatable-border: rgba(180, 215, 218, 0.12);
+  --color-dashboard-card-background: #102b3d;
+  --color-dashboard-card-border: rgba(180, 215, 218, 0.14);
+  --color-dashboard-navbar-item-text: #d7e7e9;
+  --color-dashboard-navbar-item-hover-text: #78e2c8;
+  --color-dashboard-navbar-item-hover-background: rgba(75, 212, 178, 0.1);
+  --color-dashboard-navbar-item-active-text: #78e2c8;
+  --color-dashboard-navbar-item-active-background: rgba(75, 212, 178, 0.12);
+  --color-dashboard-navbar-item-icon: #9ab8bd;
+  --color-dashboard-topbar-title-text: #edf7f7;
+  --color-dashboard-actionsbar-border: rgba(180, 215, 218, 0.14);
+  --color-dashboard-actionsbar-divider: rgba(180, 215, 218, 0.14);
+  --color-datatable-head-background: #102c3d;
+  --color-datatable-head-text: #d9e9eb;
+  --color-datatable-head-border: rgba(180, 215, 218, 0.14);
+  --color-datatable-cell-hover-background: #133448;
+  --color-datatable-cell-border: rgba(180, 215, 218, 0.1);
+  --color-sidebar-background: #061725;
+  --color-sidebar-menu-item-text: #d9e7e9;
+  --color-sidebar-menu-item-hover-background: rgba(255, 255, 255, 0.06);
+  --color-sidebar-menu-item-text-hover: #fff;
+  --color-sidebar-menu-item-active-background: rgba(75, 212, 178, 0.13);
+  --color-sidebar-menu-item-active-text: #78e2c8;
+  --color-sidebar-menu-item-focus-background: rgba(75, 212, 178, 0.18);
+  --color-sidebar-menu-label-color: #83a0a7;
+  --color-sidebar-toggle: #8aaeb4;
+  --color-bank-account-card-background: #102b3d;
+  --color-bank-account-card-text: #e5f1f2;
+  --color-bank-account-card-border: rgba(180, 215, 218, 0.17);
+  --color-bank-account-card-hover-border: #4bd4b2;
+}
+body {
+  color: #173444;
+  background: var(--color-app-body);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+body.bp4-dark {
+  color: #e1edef;
+}
+.sidebar {
+  box-shadow: 3px 0 18px rgba(7, 30, 42, 0.08);
+}
+.sidebar__head {
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid rgba(210, 238, 235, 0.1);
+  margin-bottom: 10px;
+}
+.freebooks-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 16px;
+  min-height: 27px;
+}
+.freebooks-brand img {
+  display: block;
+  width: 156px;
+  max-height: 42px;
+  object-fit: contain;
+  object-position: left center;
+  background: #fff;
+  border-radius: 6px;
+  padding: 2px 7px;
+}
+.freebooks-brand__badge {
+  color: #8ee5d0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.sidebar__head-organization .title {
+  font-size: 13px !important;
+  letter-spacing: 0.01em;
+}
+.sidebar__head-organization .subtitle {
+  color: #9db7bd !important;
+  margin-top: 4px !important;
+}
+.sidebar-menu .bp4-menu-item {
+  position: relative;
+  border-radius: 7px;
+  margin: 2px 9px;
+  padding: 9px 11px;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
+}
+.sidebar-menu .bp4-menu-item.bp4-active.bp4-intent-primary:before {
+  position: absolute;
+  content: '';
+  top: 7px;
+  bottom: 7px;
+  left: -9px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: #55dabb;
+}
+.sidebar-menu .bp4-menu-item-labeler {
+  padding-left: 19px;
+  margin-top: 11px;
+  letter-spacing: 0.11em;
+}
+.dashboard__topbar {
+  backdrop-filter: blur(12px);
+}
+.dashboard__topbar-navbar .bp4-button,
+.dashboard__topbar-user .bp4-button {
+  border-radius: 8px !important;
+  transition: background-color 120ms ease;
+}
+.dashboard__page-content {
+  padding-bottom: 20px;
+}
+.dashboard__insider {
+  background-image: radial-gradient(
+    ellipse at 100% 0%,
+    rgba(13, 155, 130, 0.055),
+    transparent 42%
+  );
+}
+body.bp4-dark .dashboard__insider {
+  background-image: radial-gradient(
+    ellipse at 100% 0%,
+    rgba(75, 212, 178, 0.075),
+    transparent 42%
+  );
+}
+.bank-account-card,
+.dashboard__card,
+.bp4-card {
+  border-radius: 11px;
+}
+.bp4-button:not(.bp4-minimal):not(.bp4-intent-danger) {
+  border-radius: 7px;
+}
+.bp4-button.bp4-intent-primary {
+  background-color: #0d9b82;
+  border-color: #0d9b82;
+  color: #fff;
+}
+body.bp4-dark .bp4-button.bp4-intent-primary {
+  background-color: #168f7b;
+  border-color: #168f7b;
+  color: #fff;
+}
+.bigcapital-datatable .thead,
+.bigcapital-datatable .table .thead {
+  letter-spacing: 0.045em;
+}
+@media (max-width: 760px) {
+  .freebooks-brand img {
+    width: 138px;
+  }
+}
+
+.sidebar--mini-sidebar .freebooks-brand {
+  display: none;
+}
+.sidebar--mini-sidebar .sidebar__scroll-wrapper:hover .freebooks-brand {
+  display: flex;
+}
+
+.banking-review-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 15px 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 11px;
+  background: var(--color-dashboard-card-background);
+}
+.banking-review-toolbar__context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.banking-review-toolbar__context > div {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+.banking-review-toolbar__context strong {
+  font-size: 14px;
+  color: var(--color-dashboard-topbar-title-text);
+}
+.banking-review-toolbar__context span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-gray2);
+  font-size: 13px;
+}
+.banking-review-toolbar__controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.banking-review-toolbar__search {
+  flex: 1 1 210px;
+  max-width: 310px;
+}
+.banking-review-toolbar__direction {
+  flex: 0 0 auto;
+}
+.banking-review-toolbar__amount {
+  flex: 0 0 112px;
+}
+.banking-review-toolbar__quick-filter {
+  border: 1px solid var(--color-dashboard-card-border) !important;
+  border-radius: 7px !important;
+}
+.banking-review-toolbar__hint {
+  margin: 0;
+  color: var(--color-gray2);
+  font-size: 12px;
+}
+.uncategorized-review-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.uncategorized-review-badges .bp4-tag {
+  white-space: nowrap;
+}
+body.bp4-dark .banking-review-toolbar__context span,
+body.bp4-dark .banking-review-toolbar__hint {
+  color: #a9c1c5;
+}
+@media (max-width: 720px) {
+  .banking-review-toolbar {
+    padding: 12px;
+  }
+  .banking-review-toolbar__context > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .banking-review-toolbar__search {
+    max-width: none;
+    flex-basis: 100%;
+  }
+}
+
+.assets-credit-page {
+  max-width: 1320px;
+  width: calc(100% - 40px);
+  margin: 20px auto 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.assets-credit-page__header h1 {
+  margin: 4px 0 6px;
+  color: var(--color-dashboard-topbar-title-text);
+  font-size: 28px;
+}
+.assets-credit-page__header p,
+.assets-credit-page__section-heading p {
+  margin: 0;
+  color: var(--color-gray2);
+  font-size: 14px;
+}
+.assets-credit-page__section-heading h2 {
+  margin: 0 0 4px;
+  color: var(--color-dashboard-topbar-title-text);
+  font-size: 19px;
+}
+.assets-credit-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.assets-credit-page__card,
+.assets-credit-page__empty {
+  padding: 16px;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 11px;
+  background: var(--color-dashboard-card-background);
+}
+.assets-credit-page__card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+.assets-credit-page__card h3 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--color-dashboard-topbar-title-text);
+}
+.assets-credit-page__snapshot {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 14px 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(13, 155, 130, 0.09);
+}
+.assets-credit-page__snapshot span,
+.assets-credit-page__snapshot small {
+  color: var(--color-gray2);
+  font-size: 12px;
+}
+.assets-credit-page__snapshot strong {
+  color: var(--color-dashboard-topbar-title-text);
+  font-size: 22px;
+}
+.assets-credit-page__card p {
+  color: var(--color-gray2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.assets-credit-page__loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 150px;
+}
+@media (max-width: 760px) {
+  .assets-credit-page {
+    width: calc(100% - 24px);
+    margin-top: 14px;
+  }
+}
+
+.source-documents-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 1320px;
+  width: calc(100% - 40px);
+  min-width: 0;
+  margin: 20px auto 36px;
+}
+.source-documents-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  min-width: 0;
+}
+.source-documents-page__eyebrow {
+  color: #0d9b82;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.source-documents-page__header h1 {
+  margin: 5px 0 6px;
+  font-size: 28px;
+  line-height: 1.15;
+  color: var(--color-dashboard-topbar-title-text);
+}
+.source-documents-page__header p {
+  margin: 0;
+  color: var(--color-gray2);
+  font-size: 14px;
+}
+.source-documents-page__receipt-upload {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 14px;
+  background: var(--color-dashboard-card-background);
+}
+.source-documents-page__receipt-intro {
+  min-width: 0;
+}
+.source-documents-page__receipt-upload h2 {
+  margin: 5px 0 5px;
+  color: var(--color-dashboard-topbar-title-text);
+  font-size: 19px;
+}
+.source-documents-page__receipt-upload p {
+  margin: 0;
+  color: var(--color-gray2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.source-documents-page__capture-hint {
+  margin-top: 10px !important;
+  color: var(--color-primary) !important;
+  font-weight: 700;
+}
+.source-documents-page__receipt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.source-documents-page__receipt-actions .bp4-button {
+  min-height: 44px;
+}
+.source-documents-page__receipt-review {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 10px;
+  background: var(--color-app-body);
+}
+.source-documents-page__receipt-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  min-height: 112px;
+  overflow: hidden;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 8px;
+  background: var(--color-dashboard-card-background);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+.source-documents-page__receipt-preview img {
+  display: block;
+  width: 100%;
+  height: 112px;
+  object-fit: contain;
+}
+.source-documents-page__receipt-review-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
+.source-documents-page__receipt-review-details strong {
+  color: var(--color-dashboard-topbar-title-text);
+}
+.source-documents-page__receipt-filename {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  color: var(--color-dashboard-topbar-title-text);
+}
+.source-documents-page__receipt-review-details small {
+  color: var(--color-gray2);
+}
+.source-documents-page__receipt-review-details label {
+  margin-top: 8px;
+  color: var(--color-gray2);
+  font-size: 12px;
+  font-weight: 600;
+}
+.source-documents-page__receipt-review-details input {
+  width: min(100%, 420px);
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid var(--color-ui-input-border);
+  border-radius: 7px;
+  background: var(--color-ui-input-background);
+  color: inherit;
+}
+.source-documents-page__receipt-review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 7px;
+}
+.source-documents-page__receipt-review-actions .bp4-button {
+  min-height: 40px;
+}
+.source-documents-page__receipt-message {
+  grid-column: 1 / -1;
+}
+.source-documents-page__privacy {
+  border-radius: 10px;
+}
+.source-documents-page__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 11px;
+  background: var(--color-dashboard-card-background);
+}
+.source-documents-page__quick-search {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  min-width: 0;
+}
+.source-documents-page__quick-search > .bp4-input-group {
+  flex: 1;
+  min-width: 0;
+}
+.source-documents-page__quick-search > .bp4-button {
+  min-height: 38px;
+}
+.source-documents-page__advanced-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.source-documents-page__search-row,
+.source-documents-page__filter-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.source-documents-page__search-row > .bp4-input-group {
+  flex: 1 1 190px;
+  min-width: 0;
+}
+.source-documents-page__search-row > .bp4-html-select {
+  flex: 1 1 170px;
+}
+.source-documents-page__filter-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-gray2);
+  font-size: 12px;
+}
+.source-documents-page__filter-row input[type='date'] {
+  height: 34px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-ui-input-border);
+  border-radius: 6px;
+  background: var(--color-ui-input-background);
+  color: inherit;
+}
+.source-documents-page__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 180px;
+  color: var(--color-gray2);
+}
+.source-documents-page__empty {
+  padding: 36px;
+  text-align: center;
+  border: 1px dashed var(--color-dashboard-card-border);
+  border-radius: 11px;
+  background: var(--color-dashboard-card-background);
+}
+.source-documents-page__empty h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: var(--color-dashboard-topbar-title-text);
+}
+.source-documents-page__empty p {
+  margin: 0;
+  color: var(--color-gray2);
+}
+.source-documents-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.source-document-card {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 11px;
+  background: var(--color-dashboard-card-background);
+}
+.source-document-card__main {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.source-document-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(13, 155, 130, 0.1);
+  color: #0a7565;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.source-document-card__details {
+  min-width: 0;
+}
+.source-document-card__details h2 {
+  overflow: hidden;
+  margin: 0 0 6px;
+  color: var(--color-dashboard-topbar-title-text);
+  font-size: 14px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.source-document-card__metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+  color: var(--color-gray2);
+  font-size: 12px;
+}
+.source-document-card__details small {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-gray3);
+  font-family: monospace;
+  font-size: 10px;
+}
+.source-document-card__links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 12px 0 0 58px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-dashboard-card-border);
+  color: var(--color-gray2);
+  font-size: 12px;
+}
+.source-document-card__links strong {
+  margin-right: 3px;
+  color: var(--color-dashboard-topbar-title-text);
+}
+.source-documents-page__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 2px;
+  color: var(--color-gray2);
+  font-size: 13px;
+}
+.source-documents-page__pagination > div {
+  display: flex;
+  gap: 5px;
+}
+body.bp4-dark .source-documents-page__eyebrow {
+  color: #67dfc2;
+}
+body.bp4-dark .source-document-card__icon {
+  background: rgba(75, 212, 178, 0.12);
+  color: #79e4ca;
+}
+@media (max-width: 760px) {
+  .assets-credit-page {
+    max-width: 1320px;
+    width: calc(100% - 40px);
+    margin: 20px auto 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .assets-credit-page__header h1 {
+    margin: 4px 0 6px;
+    color: var(--color-dashboard-topbar-title-text);
+    font-size: 28px;
+  }
+  .assets-credit-page__header p,
+  .assets-credit-page__section-heading p {
+    margin: 0;
+    color: var(--color-gray2);
+    font-size: 14px;
+  }
+  .assets-credit-page__section-heading h2 {
+    margin: 0 0 4px;
+    color: var(--color-dashboard-topbar-title-text);
+    font-size: 19px;
+  }
+  .assets-credit-page__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .assets-credit-page__card,
+  .assets-credit-page__empty {
+    padding: 16px;
+    border: 1px solid var(--color-dashboard-card-border);
+    border-radius: 11px;
+    background: var(--color-dashboard-card-background);
+  }
+  .assets-credit-page__card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .assets-credit-page__card h3 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--color-dashboard-topbar-title-text);
+  }
+  .assets-credit-page__snapshot {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 14px 0;
+    padding: 12px;
+    border-radius: 8px;
+    background: rgba(13, 155, 130, 0.09);
+  }
+  .assets-credit-page__snapshot span,
+  .assets-credit-page__snapshot small {
+    color: var(--color-gray2);
+    font-size: 12px;
+  }
+  .assets-credit-page__snapshot strong {
+    color: var(--color-dashboard-topbar-title-text);
+    font-size: 22px;
+  }
+  .assets-credit-page__card p {
+    color: var(--color-gray2);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .assets-credit-page__loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 150px;
+  }
+  @media (max-width: 760px) {
+    .assets-credit-page {
+      width: calc(100% - 24px);
+      margin-top: 14px;
+    }
+  }
+
+  .source-documents-page {
+    width: calc(100% - 24px);
+    margin-top: 14px;
+  }
+  .source-documents-page__header {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .source-documents-page__header h1 {
+    font-size: 24px;
+  }
+  .source-documents-page__receipt-upload {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+  }
+  .source-documents-page__receipt-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .source-documents-page__receipt-review {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+  .source-documents-page__receipt-preview {
+    width: 76px;
+    min-height: 96px;
+  }
+  .source-documents-page__receipt-preview img {
+    height: 96px;
+  }
+  .source-documents-page__advanced-filters {
+    display: none;
+  }
+  .source-documents-page__advanced-filters.is-open {
+    display: flex;
+  }
+  .source-documents-page__search-row > .bp4-input-group,
+  .source-documents-page__search-row > .bp4-html-select {
+    flex-basis: 100%;
+  }
+  .source-documents-page__filter-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .source-documents-page__filter-row label {
+    justify-content: space-between;
+    width: 100%;
+  }
+  .source-documents-page__filter-row input[type='date'],
+  .source-documents-page__filter-row .bp4-html-select {
+    width: min(60%, 250px);
+  }
+  .source-document-card__main {
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px 12px;
+  }
+  .source-document-card__details h2 {
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
+  .source-document-card__main > .bp4-tag {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .source-document-card__main > .bp4-button {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 44px;
+  }
+  .source-document-card__links {
+    margin-left: 0;
+  }
+  .source-documents-page__pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .source-documents-page__pagination > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .source-documents-page__pagination .bp4-button {
+    min-height: 44px;
+  }
+  .source-documents-page__empty {
+    padding: 24px 16px;
+  }
+}
+@media (max-width: 420px) {
+  .source-documents-page__receipt-actions {
+    grid-template-columns: 1fr;
+  }
+  .source-documents-page__receipt-review {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .source-documents-page__receipt-preview {
+    width: 100%;
+    max-height: 210px;
+  }
+  .source-documents-page__receipt-preview img {
+    height: 210px;
+  }
+  .source-documents-page__receipt-review-details input,
+  .source-documents-page__receipt-review-actions,
+  .source-documents-page__receipt-review-actions .bp4-button {
+    width: 100%;
+  }
+
+}

@@ -1,0 +1,73 @@
+// @ts-nocheck
+import {
+  Button,
+  Classes,
+  NavbarGroup,
+  Intent,
+  NavbarDivider,
+} from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
+import {
+  Can,
+  FormattedMessage as T,
+  DrawerActionsBar,
+  Icon,
+  If,
+} from '@/components';
+import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+
+/**
+ * Cashflow transaction drawer action bar.
+ */
+function CashflowTransactionDrawerActionBarInner({
+  // #withAlertsDialog
+  openAlert,
+}) {
+  const { referenceId, cashflowTransaction } =
+    useCashflowTransactionDrawerContext();
+
+  // Handle cashflow transaction delete action.
+  const handleDeleteCashflowTransaction = () => {
+    openAlert('account-transaction-delete', { referenceId });
+  };
+
+  // Handles the uncategorize button click.
+  const handleUncategorizeBtnClick = () => {
+    openAlert('cashflow-tranaction-uncategorize', {
+      uncategorizedTransactionId:
+        cashflowTransaction.uncategorizedTransactionId,
+    });
+  };
+
+  return (
+    <Can I={CashflowAction.Delete} a={AbilitySubject.Cashflow}>
+      <DrawerActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeleteCashflowTransaction}
+          />
+          <If condition={cashflowTransaction.uncategorizedTransactionId}>
+            <NavbarDivider />
+            <Button
+              text={'Uncategorize'}
+              onClick={handleUncategorizeBtnClick}
+              className={Classes.MINIMAL}
+            />
+          </If>
+        </NavbarGroup>
+      </DrawerActionsBar>
+    </Can>
+  );
+}
+
+export const CashflowTransactionDrawerActionBar = FF.pipe(
+  CashflowTransactionDrawerActionBarInner,
+  withAlertActions,
+);

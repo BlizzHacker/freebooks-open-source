@@ -1,0 +1,64 @@
+import * as FF from 'fp-ts/function';
+import { useEffect } from 'react';
+import '@/style/pages/Vendors/List.scss';
+import { VendorActionsBar } from './VendorActionsBar';
+import { VendorsListDialogs } from './VendorsListDialogs';
+import { VendorsListProvider } from './VendorsListProvider';
+import { VendorsTable } from './VendorsTable';
+import { withVendors } from './withVendors';
+import { withVendorsActions } from './withVendorsActions';
+import type { WithVendorsProps } from './withVendors';
+import type { WithVendorsActionsProps } from './withVendorsActions';
+import { DashboardPageContent } from '@/components';
+
+interface VendorsListInnerProps
+  extends Pick<
+      WithVendorsProps,
+      'vendorsTableState' | 'vendorsTableStateChanged'
+    >,
+    WithVendorsActionsProps {}
+
+/**
+ * Vendors list page.
+ */
+function VendorsListInner({
+  // #withVendors
+  vendorsTableState,
+  vendorsTableStateChanged,
+
+  // #withVendorsActions
+  resetVendorsTableState,
+  resetVendorsSelectedRows,
+}: VendorsListInnerProps) {
+  // Resets the vendors table state once the page unmount.
+  useEffect(
+    () => () => {
+      resetVendorsTableState();
+      resetVendorsSelectedRows();
+    },
+    [resetVendorsSelectedRows, resetVendorsTableState],
+  );
+
+  return (
+    <VendorsListProvider
+      tableState={vendorsTableState}
+      tableStateChanged={vendorsTableStateChanged}
+    >
+      <VendorActionsBar />
+      <VendorsListDialogs />
+
+      <DashboardPageContent>
+        <VendorsTable />
+      </DashboardPageContent>
+    </VendorsListProvider>
+  );
+}
+
+export const VendorsList = FF.pipe(
+  VendorsListInner,
+  withVendorsActions,
+  withVendors(({ vendorsTableState, vendorsTableStateChanged }) => ({
+    vendorsTableState,
+    vendorsTableStateChanged,
+  })),
+);

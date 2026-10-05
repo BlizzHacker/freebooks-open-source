@@ -1,0 +1,14 @@
+import React from 'react';
+import { CustomersBalanceSummaryGeneralPanelContent } from './CustomersBalanceSummaryGeneralPanelContent';
+import { CustomersBalanceSummaryGeneralProvider } from './CustomersBalanceSummaryGeneralProvider';
+
+/**
+ * Customers balance header - General panel.
+ */
+export function CustomersBalanceSummaryGeneralPanel() {
+  return (
+    <CustomersBalanceSummaryGeneralProvider>
+      <CustomersBalanceSummaryGeneralPanelContent />
+    </CustomersBalanceSummaryGeneralProvider>
+  );
+}

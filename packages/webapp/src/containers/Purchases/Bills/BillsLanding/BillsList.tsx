@@ -1,0 +1,61 @@
+import * as FF from 'fp-ts/function';
+import React, { useEffect } from 'react';
+import { BillsActionsBar } from './BillsActionsBar';
+import { BillsListDialogs } from './BillsListDialogs';
+import { BillsListDrawers } from './BillsListDrawers';
+import { BillsListProvider } from './BillsListProvider';
+import { BillsTable } from './BillsTable';
+import { withBills } from './withBills';
+import { withBillsActions } from './withBillsActions';
+import type { WithBillsProps } from './withBills';
+import { DashboardPageContent } from '@/components';
+import '@/style/pages/Bills/List.scss';
+import { transformTableStateToQuery } from '@/utils';
+
+interface WithBillsActionsProps {
+  resetBillsTableState: () => void;
+  resetBillsSelectedRows: () => void;
+}
+
+interface BillsListProps
+  extends Pick<WithBillsProps, 'billsTableState' | 'billsTableStateChanged'>,
+    WithBillsActionsProps {}
+
+function BillsListInner({
+  billsTableState,
+  billsTableStateChanged,
+  resetBillsTableState,
+  resetBillsSelectedRows,
+}: BillsListProps) {
+  useEffect(
+    () => () => {
+      resetBillsTableState();
+      resetBillsSelectedRows();
+    },
+    [resetBillsSelectedRows, resetBillsTableState],
+  );
+
+  return (
+    <BillsListProvider
+      query={transformTableStateToQuery(billsTableState)}
+      tableStateChanged={billsTableStateChanged}
+    >
+      <BillsActionsBar />
+      <BillsListDrawers />
+      <BillsListDialogs />
+
+      <DashboardPageContent>
+        <BillsTable />
+      </DashboardPageContent>
+    </BillsListProvider>
+  );
+}
+
+export const BillsList = FF.pipe(
+  BillsListInner,
+  withBillsActions,
+  withBills(({ billsTableState, billsTableStateChanged }) => ({
+    billsTableState,
+    billsTableStateChanged,
+  })),
+);

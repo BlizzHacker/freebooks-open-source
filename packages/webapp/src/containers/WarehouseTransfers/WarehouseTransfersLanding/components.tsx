@@ -1,0 +1,160 @@
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import {
+  FormatDateCell,
+  FormattedMessage as T,
+  Choose,
+  If,
+  Icon,
+} from '@/components';
+import { safeCallback } from '@/utils';
+
+interface WarehouseTransferRow {
+  id: number;
+  isTransferred?: boolean;
+  isInitiated?: boolean;
+}
+
+interface ActionsMenuPayload {
+  onEdit?: (row: WarehouseTransferRow) => void;
+  onDelete?: (row: WarehouseTransferRow) => void;
+  onViewDetails?: (row: WarehouseTransferRow) => void;
+  onInitate?: (row: WarehouseTransferRow) => void;
+  onTransfer?: (row: WarehouseTransferRow) => void;
+}
+
+interface ActionsMenuProps {
+  payload: ActionsMenuPayload;
+  row: { original: WarehouseTransferRow };
+}
+
+export function ActionsMenu({
+  payload: { onEdit, onDelete, onViewDetails, onInitate, onTransfer },
+  row: { original },
+}: ActionsMenuProps) {
+  return (
+    <Menu>
+      <MenuItem
+        icon={<Icon icon="reader-18" />}
+        text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
+      />
+      <MenuDivider />
+      <MenuItem
+        icon={<Icon icon="pen-18" />}
+        text={intl.get('warehouse_transfer.action.edit_warehouse_transfer')}
+        onClick={safeCallback(onEdit, original)}
+      />
+
+      <If condition={Boolean(!original.isTransferred && !original.isInitiated)}>
+        <MenuItem
+          icon={<Icon icon={'check'} iconSize={18} />}
+          text={intl.get('warehouse_transfer.action.initiate_transfer')}
+          onClick={safeCallback(onInitate, original)}
+        />
+      </If>
+      <If condition={Boolean(original.isInitiated && !original.isTransferred)}>
+        <MenuItem
+          icon={<Icon icon="send" iconSize={16} />}
+          text={intl.get('warehouse_transfer.action.mark_as_transferred')}
+          onClick={safeCallback(onTransfer, original)}
+        />
+      </If>
+
+      <MenuDivider />
+      <MenuItem
+        text={intl.get('warehouse_transfer.action.delete_warehouse_transfer')}
+        intent={Intent.DANGER}
+        onClick={safeCallback(onDelete, original)}
+        icon={<Icon icon="trash-16" iconSize={16} />}
+      />
+    </Menu>
+  );
+}
+
+/**
+ * Status accessor.
+ */
+export function StatusAccessor(warehouse: WarehouseTransferRow) {
+  return (
+    <Choose>
+      <Choose.When
+        condition={Boolean(warehouse.isInitiated && !warehouse.isTransferred)}
+      >
+        <Tag minimal={true} intent={Intent.WARNING} round={true}>
+          <T id={'warehouse_transfer.label.transfer_initiated'} />
+        </Tag>
+      </Choose.When>
+      <Choose.When
+        condition={Boolean(warehouse.isInitiated && warehouse.isTransferred)}
+      >
+        <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
+          <T id={'warehouse_transfer.label.transferred'} />
+        </Tag>
+      </Choose.When>
+
+      <Choose.Otherwise>
+        <Tag minimal={true} intent={Intent.NONE} round={true}>
+          <T id={'draft'} />
+        </Tag>
+      </Choose.Otherwise>
+    </Choose>
+  );
+}
+
+/**
+ * Retrieve warehouse transfer table columns.
+ */
+export function useWarehouseTransfersTableColumns() {
+  return React.useMemo(
+    () => [
+      {
+        id: 'date',
+        Header: intl.get('date'),
+        accessor: 'formattedDate',
+        Cell: FormatDateCell,
+        width: 120,
+        className: 'date',
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'transaction_number',
+        Header: intl.get('warehouse_transfer.column.transfer_no'),
+        accessor: 'transactionNumber',
+        width: 100,
+        className: 'transaction_number',
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'from_warehouse',
+        Header: intl.get('warehouse_transfer.column.from_warehouse'),
+        accessor: 'fromWarehouse.name',
+        width: 140,
+        className: 'from_warehouse',
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'to_warehouse',
+        Header: intl.get('warehouse_transfer.column.to_warehouse'),
+        accessor: 'toWarehouse.name',
+        width: 140,
+        className: 'to_warehouse',
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'status',
+        Header: intl.get('status'),
+        accessor: StatusAccessor,
+        width: 140,
+        className: 'status',
+        clickable: true,
+      },
+    ],
+    [],
+  );
+}

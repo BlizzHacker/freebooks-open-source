@@ -1,0 +1,138 @@
+import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useNotifyInvoiceViaSMSContext } from './NotifyInvoiceViaSMSFormProvider';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { NotifyViaSMSForm as NotifyViaSMSFormBase } from '@/containers/NotifyViaSMS/NotifyViaSMSForm';
+import { transformErrors } from '@/containers/NotifyViaSMS/utils';
+
+// `NotifyViaSMSForm` is `@ts-nocheck` with required destructured props; widen
+// locally so this dialog can pass only the props it actually uses.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type NotifyViaSMSFormProps = {
+  initialValues?: any;
+  notificationTypes?: any;
+  onSubmit?: any;
+  onCancel?: any;
+  onValuesChange?: any;
+  calloutCodes?: any;
+  formikProps?: any;
+};
+const NotifyViaSMSForm =
+  NotifyViaSMSFormBase as unknown as React.ComponentType<NotifyViaSMSFormProps>;
+
+interface NotifyViaSMSFormValues {
+  notificationKey: string;
+  [key: string]: unknown;
+}
+
+// Momerize the notification types.
+const notificationTypes = [
+  {
+    key: 'details',
+    label: intl.get('sms_notification.invoice_details.type'),
+  },
+  {
+    key: 'reminder',
+    label: intl.get('sms_notification.invoice_reminder.type'),
+  },
+];
+
+interface NotifyInvoiceViaSMSFormProps extends WithDialogActionsProps {}
+
+/**
+ * Notify Invoice Via SMS Form.
+ */
+function NotifyInvoiceViaSMSFormInner({
+  closeDialog,
+}: NotifyInvoiceViaSMSFormProps): React.ReactElement {
+  const {
+    createNotifyInvoiceBySMSMutate,
+    invoiceId,
+    invoiceSMSDetail,
+    dialogName,
+    notificationType,
+    setNotificationType,
+  } = useNotifyInvoiceViaSMSContext();
+
+  const [calloutCode, setCalloutCode] = React.useState<number[]>([]);
+
+  // Handles the form submit.
+  const handleFormSubmit = (
+    _values: NotifyViaSMSFormValues,
+    {
+      setSubmitting,
+      setErrors,
+    }: {
+      setSubmitting: (isSubmitting: boolean) => void;
+      setErrors: (errors: Partial<Record<string, string>>) => void;
+    },
+  ) => {
+    setSubmitting(true);
+
+    // Handle request response success.
+    const onSuccess = () => {
+      AppToaster.show({
+        message: intl.get('notify_invoice_via_sms.dialog.success_message'),
+        intent: Intent.SUCCESS,
+      });
+      setSubmitting(false);
+      closeDialog(dialogName);
+    };
+    // Handle request response errors.
+    const onError = ({
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
+    }) => {
+      if (errors) {
+        transformErrors(errors, { setErrors, setCalloutCode });
+      }
+      setSubmitting(false);
+    };
+    // Submits invoice SMS notification.
+    createNotifyInvoiceBySMSMutate([
+      invoiceId as number,
+      notificationType as 'details' | 'reminder',
+    ])
+      .then(onSuccess)
+      .catch(onError);
+  };
+  // Handle the form cancel.
+  const handleFormCancel = React.useCallback(() => {
+    closeDialog(dialogName);
+  }, [closeDialog, dialogName]);
+
+  // `NotifyViaSMSForm` expects camelCase field keys.
+  const initialValues = {
+    customerName: invoiceSMSDetail.customerName ?? '',
+    customerPhoneNumber: invoiceSMSDetail.customerPhoneNumber ?? '',
+    smsMessage: invoiceSMSDetail.smsMessage ?? '',
+    notificationKey: notificationType,
+  };
+  // Handle form values change.
+  const handleValuesChange = (values: NotifyViaSMSFormValues) => {
+    if (values.notificationKey !== notificationType) {
+      setNotificationType(values.notificationKey);
+    }
+  };
+
+  return (
+    <NotifyViaSMSForm
+      initialValues={initialValues}
+      notificationTypes={notificationTypes}
+      onSubmit={handleFormSubmit}
+      onCancel={handleFormCancel}
+      onValuesChange={handleValuesChange}
+      calloutCodes={calloutCode}
+    />
+  );
+}
+
+export const NotifyInvoiceViaSMSForm = FF.pipe(
+  NotifyInvoiceViaSMSFormInner,
+  withDialogActions,
+);

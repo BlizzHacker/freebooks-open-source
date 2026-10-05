@@ -1,0 +1,41 @@
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from '../../common/FinancialSheet';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
+
+export const BalanceSheetBase = <T extends GConstructor<FinancialSheet>>(
+  Base: T,
+) =>
+  class BalanceSheetBase extends Base {
+    query: BalanceSheetQuery;
+
+    /**
+     * Determines the node type of the given schema node.
+     * @param {IBalanceSheetStructureSection} node -
+     * @param {string} type -
+     * @return {boolean}
+     */
+    public isSchemaNodeType =
+      (type: string) =>
+      (node): boolean => {
+        return node.type === type;
+      };
+    /**
+     * Determines the node type of the given schema node.
+     * @param {IBalanceSheetStructureSection} node -
+     * @param {string} type -
+     * @return {boolean}
+     */
+    public isNodeType =
+      (type: string) =>
+      (node): boolean => {
+        return node.nodeType === type;
+      };
+    /**
+     * Determines the given display columns by type.
+     * @param {string} displayColumnsBy
+     * @returns {boolean}
+     */
+    public isDisplayColumnsBy = (displayColumnsBy: string): boolean => {
+      return this.query.displayColumnsType === displayColumnsBy;
+    };
+  };

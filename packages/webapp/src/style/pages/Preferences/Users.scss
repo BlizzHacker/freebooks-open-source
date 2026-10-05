@@ -1,0 +1,39 @@
+// Users/Roles List.
+// ---------------------------------
+.preferences-page__inside-content--users {
+  --color-avatar-background: #b7bfc6;
+  --color-avatar-text: #fff;
+
+  .bp4-dark & {
+    --color-avatar-background: rgba(255, 255, 255, 0.2);
+    --color-avatar-text: #fff;
+  }
+  .bigcapital-datatable {
+    .td {
+      .avatar {
+        display: block;
+        height: 28px;
+        width: 28px;
+        text-align: center;
+        background: var(--color-avatar-background);
+        border-radius: 50%;
+        line-height: 28px;
+        color: #fff;
+        text-transform: uppercase;
+        margin-left: 10px;
+      }
+    }
+    .td.status {
+      text-transform: uppercase;
+    }
+
+    .tr:last-child .td {
+      border-bottom: 0;
+    }
+  }
+  .bp4-tabs {
+    .bp4-tab-panel {
+      margin-top: 0;
+    }
+  }
+}

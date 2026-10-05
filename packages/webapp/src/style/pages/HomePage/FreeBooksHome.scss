@@ -1,0 +1,114 @@
+/* FreeBooks overview */
+.freebooks-home {
+  --fb-surface: var(--color-dashboard-card-background);
+  --fb-border: var(--color-dashboard-card-border);
+  --fb-text: var(--color-dashboard-topbar-title-text);
+  --fb-muted: var(--color-datatable-head-text);
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 28px clamp(14px, 3vw, 42px) 70px;
+  color: var(--fb-text);
+}
+.freebooks-home__hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  min-height: 245px;
+  padding: clamp(24px, 3.4vw, 45px);
+  border: 1px solid rgba(106, 235, 204, .28);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 92% 48%, rgba(60, 230, 185, .26), transparent 28%),
+    linear-gradient(113deg, #0a3049 0%, #075766 74%, #07836f 100%);
+  box-shadow: 0 17px 42px rgba(4, 40, 49, .18);
+  color: white;
+}
+.freebooks-home__hero .freebooks-eyebrow { color: #a8f4db; }
+.freebooks-home__hero-copy { max-width: 690px; }
+.freebooks-home__hero-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 160px;
+  color: #b4f6dc;
+  font-size: 15px;
+  font-weight: 780;
+  letter-spacing: .06em;
+}
+.freebooks-home__hero-mark img {
+  width: 102px;
+  height: 102px;
+  object-fit: contain;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .95);
+  padding: 6px;
+  margin-bottom: 8px;
+}
+.freebooks-home__hero-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 23px; }
+.freebooks-home__next, .freebooks-home__workspace { padding-top: 34px; }
+.freebooks-home__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.freebooks-home__steps a {
+  display: grid;
+  grid-template-columns: 38px 1fr auto;
+  align-items: center;
+  gap: 4px 10px;
+  min-height: 104px;
+  padding: 17px;
+  border: 1px solid var(--fb-border);
+  border-radius: 15px;
+  background: var(--fb-surface);
+  color: var(--fb-text);
+  box-shadow: 0 4px 16px rgba(4, 40, 49, .05);
+  text-decoration: none;
+  transition: border-color .15s ease, transform .15s ease;
+}
+.freebooks-home__steps a:hover, .freebooks-home__area:hover { border-color: var(--color-primary); transform: translateY(-2px); text-decoration: none; }
+.freebooks-home__step-number {
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(55, 200, 162, .14);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 800;
+}
+.freebooks-home__steps strong { grid-column: 2; align-self: end; font-size: 14px; }
+.freebooks-home__steps a > span:nth-child(3) { grid-column: 2; align-self: start; color: var(--fb-muted); font-size: 11px; line-height: 1.35; }
+.freebooks-home__step-arrow { grid-column: 3; grid-row: 1 / 3; color: var(--color-primary); font-size: 20px; }
+.freebooks-home__areas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+.freebooks-home__area {
+  display: flex;
+  flex-direction: column;
+  min-height: 190px;
+  padding: 20px;
+  border: 1px solid var(--fb-border);
+  border-radius: 16px;
+  background: var(--fb-surface);
+  color: var(--fb-text);
+  text-decoration: none;
+  transition: border-color .15s ease, transform .15s ease;
+}
+.freebooks-home__area strong { margin-top: 13px; font-size: 15px; }
+.freebooks-home__area > span:nth-child(3) { flex: 1; margin-top: 7px; color: var(--fb-muted); font-size: 12px; line-height: 1.5; }
+.freebooks-home__area em { margin-top: 14px; color: var(--color-primary); font-size: 12px; font-style: normal; font-weight: 780; }
+@media (max-width: 1100px) { .freebooks-home__steps, .freebooks-home__areas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .freebooks-home { padding: 12px 12px 90px; }
+  .freebooks-home__hero { border-radius: 16px; padding: 23px; }
+  .freebooks-home__hero-mark { display: none; }
+  .freebooks-home__hero p { font-size: 13px; }
+  .freebooks-home__hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .freebooks-home__hero-actions .freebooks-action { width: 100%; min-width: 0; padding: 9px; white-space: normal; text-align: center; }
+  .freebooks-home__steps, .freebooks-home__areas { grid-template-columns: 1fr; gap: 10px; }
+  .freebooks-home__steps a { min-height: 87px; }
+  .freebooks-home__area { min-height: 0; }
+}

@@ -1,0 +1,54 @@
+// @ts-nocheck
+import intl from 'react-intl-universal';
+import { AbilitySubject, ManualJournalAction } from '@/constants/abilityOption';
+import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+
+/**
+ * Universal search manual journal item select action.
+ */
+function JournalUniversalSearchSelectComponent({
+  // #ownProps
+  resourceType,
+  resourceId,
+  onAction,
+
+  // #withDrawerActions
+  openDrawer,
+}) {
+  if (resourceType === RESOURCES_TYPES.MANUAL_JOURNAL) {
+    openDrawer(DRAWERS.JOURNAL_DETAILS, { manualJournalId: resourceId });
+    onAction && onAction();
+  }
+  return null;
+}
+
+export const JournalUniversalSearchSelectAction = withDrawerActions(
+  JournalUniversalSearchSelectComponent,
+);
+
+/**
+ * Mappes the manual journal item to search item.
+ */
+const manualJournalsToSearch = (manualJournal) => ({
+  id: manualJournal.id,
+  text: manualJournal.journalNumber ?? '',
+  subText: manualJournal.formattedDate ?? '',
+  label: manualJournal.formattedAmount ?? '',
+  reference: manualJournal,
+});
+
+/**
+ * Binds universal search invoice configure.
+ */
+export const universalSearchJournalBind = () => ({
+  resourceType: RESOURCES_TYPES.MANUAL_JOURNAL,
+  optionItemLabel: intl.get('manual_journals'),
+  selectItemAction: JournalUniversalSearchSelectAction,
+  itemSelect: manualJournalsToSearch,
+  permission: {
+    ability: ManualJournalAction.View,
+    subject: AbilitySubject.ManualJournal,
+  },
+});

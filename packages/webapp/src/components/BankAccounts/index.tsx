@@ -1,0 +1,216 @@
+// @ts-nocheck
+import { Classes } from '@blueprintjs/core';
+import clsx from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { Icon } from '@/components/Icon';
+
+const ACCOUNT_TYPE = {
+  CASH: 'cash',
+  BANK: 'bank',
+  CREDIT_CARD: 'credit-card',
+};
+
+const ACCOUNT_TYPE_PAIR_ICON = {
+  [ACCOUNT_TYPE.CASH]: 'payments',
+  [ACCOUNT_TYPE.CREDIT_CARD]: 'credit-card',
+  [ACCOUNT_TYPE.BANK]: 'account-balance',
+};
+
+function BankAccountMetaLine({ title, value, className }) {
+  return (
+    <MetaLineWrap className={className}>
+      <MetaLineTitle>{title}</MetaLineTitle>
+      {value && <MetaLineValue>{value}</MetaLineValue>}
+    </MetaLineWrap>
+  );
+}
+
+function BankAccountBalance({ amount, loading }) {
+  return (
+    <BankAccountBalanceWrap>
+      <BankAccountBalanceAmount
+        className={clsx({
+          [Classes.SKELETON]: loading,
+        })}
+      >
+        {amount}
+      </BankAccountBalanceAmount>
+      <BankAccountBalanceLabel>Posted ledger balance</BankAccountBalanceLabel>
+    </BankAccountBalanceWrap>
+  );
+}
+
+function BankAccountTypeIcon({ type }) {
+  const icon = ACCOUNT_TYPE_PAIR_ICON[type];
+
+  if (!icon) {
+    return;
+  }
+  return (
+    <AccountIconWrap>
+      <Icon icon={icon} iconSize={18} />
+    </AccountIconWrap>
+  );
+}
+
+export function BankAccount({
+  title,
+  code,
+  type,
+  balance,
+  loading = false,
+  updatedBeforeText,
+  uncategorizedTransactionsCount,
+  ...restProps
+}) {
+  return (
+    <BankAccountWrap
+      {...restProps}
+      className={clsx('freebooks-bank-account', restProps.className)}
+    >
+      <BankAccountHeader>
+        <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>
+          {title}
+        </BankAccountTitle>
+        <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
+          {code}
+        </BnakAccountCode>
+        {!loading && <BankAccountTypeIcon type={type} />}
+      </BankAccountHeader>
+
+      <BankAccountMeta>
+        {uncategorizedTransactionsCount != null && (
+          <BankAccountMetaLine
+            title={'Awaiting review'}
+            value={uncategorizedTransactionsCount}
+            className={clsx({ [Classes.SKELETON]: loading })}
+          />
+        )}
+        {updatedBeforeText && (
+          <BankAccountMetaLine
+            title={updatedBeforeText}
+            className={clsx({ [Classes.SKELETON]: loading })}
+          />
+        )}
+      </BankAccountMeta>
+
+      <BankAccountBalance amount={balance} loading={loading} />
+    </BankAccountWrap>
+  );
+}
+
+const BankAccountWrap = styled.div`
+  width: 225px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 3px;
+  background: var(--color-bank-account-card-background);
+  margin: 8px;
+  border: 1px solid var(--color-bank-account-card-border);
+  transition: all 0.1s ease-in-out;
+  color: var(--color-bank-account-card-text);
+
+  &:hover {
+    border-color: var(--color-bank-account-card-hover-border);
+  }
+`;
+
+const BankAccountHeader = styled.div`
+  padding: 10px 12px;
+  padding-top: 16px;
+  position: relative;
+`;
+
+const BankAccountTitle = styled.div`
+  font-size: 15px;
+  font-style: inherit;
+  letter-spacing: -0.003em;
+  // color: rgb(23, 43, 77);
+  white-space: nowrap;
+  font-weight: 600;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0px;
+  padding-right: 24px;
+`;
+
+const BnakAccountCode = styled.div`
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--color-bank-account-code-text);
+  display: inline-block;
+`;
+
+const BankAccountBalanceWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  border-top: 1px solid var(--color-bank-account-card-border);
+  padding: 10px 12px;
+`;
+
+const BankAccountBalanceAmount = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  // color: #57657e;
+`;
+
+const BankAccountBalanceLabel = styled.div`
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  margin-top: 3px;
+  opacity: 0.6;
+`;
+
+const MetaLineWrap = styled.div`
+  font-size: 11px;
+  display: flex;
+  // color: #2f3c58;
+
+  &:not(:first-of-type) {
+    margin-top: 6px;
+  }
+`;
+const MetaLineTitle = styled.div``;
+
+const MetaLineValue = styled.div`
+  box-sizing: border-box;
+  font-style: inherit;
+  background: var(--color-bank-account-card-tag-background);
+  line-height: initial;
+  align-content: center;
+  padding: 0px 2px;
+  border-radius: 9.6px;
+  font-weight: normal;
+  text-transform: none;
+  width: 30px;
+  min-width: 30px;
+  // color: rgb(23, 43, 77);
+  height: 16px;
+  text-align: center;
+  font-size: 11px;
+  margin-left: auto;
+`;
+
+const BankAccountMeta = styled.div`
+  padding: 0 12px 10px;
+`;
+
+export const BankAccountsList = styled.div`
+  display: flex;
+  margin: -8px;
+  flex-wrap: wrap;
+`;
+
+const AccountIconWrap = styled.div`
+  position: absolute;
+  top: 14px;
+  color: #abb3bb;
+  right: 12px;
+`;

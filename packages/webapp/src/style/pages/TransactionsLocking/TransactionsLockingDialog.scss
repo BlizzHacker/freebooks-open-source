@@ -1,0 +1,32 @@
+.dialog--transaction--locking {
+  max-width: 450px;
+
+  .bp4-form-group {
+    margin-bottom: 10px;
+    margin-top: 10px;
+
+    label.bp4-label {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  }
+
+  .form-group {
+    &--reason {
+      .bp4-form-content {
+        textarea {
+          width: 100%;
+          min-height: 85px;
+          min-width: 100%;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  .bp4-dialog-footer {
+    display: flex;
+    justify-content: flex-start;
+    // padding-top: 10px;
+    margin-left: 10px;
+  }
+}

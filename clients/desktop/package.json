@@ -1,0 +1,21 @@
+{
+  "name": "freebooks-desktop",
+  "version": "0.1.0-alpha.1",
+  "description": "FreeBooks desktop client and local self-hosted server launcher",
+  "main": "src/main.cjs",
+  "license": "AGPL-3.0-only",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/security.test.cjs",
+    "dist": "electron-builder --config electron-builder.config.cjs"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "author": "FreeBooks contributors"
+}

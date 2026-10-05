@@ -1,0 +1,76 @@
+.cashflow-drawer {
+  .card {
+    margin: 15px;
+    padding: 25px 15px 35px;
+  }
+
+  .card {
+    .amount {
+      font-size: 28px;
+      color: #c06361;
+      margin: 6px 0;
+      font-weight: 600;
+    }
+  }
+
+  &__content {
+    &-header {
+      margin-bottom: 35px;
+
+      .detail-item {
+        flex-grow: 1;
+
+        &--amount {
+          width: 20%;
+        }
+      }
+    }
+
+    &-footer {
+      display: flex;
+
+      .total-lines {
+        margin-left: auto;
+      }
+    }
+  }
+  .total-lines {
+    &__line {
+      display: flex;
+
+      > div {
+        padding: 7px 8px;
+      }
+
+      .title {
+        width: 220px;
+        font-weight: 600;
+      }
+
+      .credit,
+      .debit {
+        font-weight: 600;
+        width: 155px;
+      }
+
+      &--subtotal {
+        border-bottom: 1px solid #000;
+
+        .bp4-dark & {
+          border-bottom-color: var(--color-dark-gray5);
+        }
+      }
+      &--total {
+        border-bottom: 3px double #000;
+
+        .bp4-dark & {
+          border-bottom-color: var(--color-dark-gray5);
+        }
+      }
+      &--subtotal,
+      &--total {
+        text-align: right;
+      }
+    }
+  }
+}

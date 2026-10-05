@@ -1,0 +1,479 @@
+/* FreeBooks app shell: shared navigation and phone layouts for every ledger screen. */
+:root {
+  --freebooks-raised: 0 10px 28px rgba(8, 47, 62, 0.07);
+  --freebooks-dock: #ffffff;
+}
+body.bp4-dark {
+  --freebooks-raised: 0 12px 30px rgba(0, 0, 0, 0.22);
+  --freebooks-dock: #102839;
+}
+.dashboard__topbar {
+  min-height: 68px;
+  box-shadow: 0 2px 16px rgba(10, 50, 65, 0.04);
+  position: relative;
+  z-index: 2;
+}
+.dashboard__title h1 {
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.dashboard__actions-bar .bp4-navbar {
+  min-height: 48px;
+}
+.dashboard__datatable {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--freebooks-raised);
+}
+.dashboard__card,
+.bank-account-card,
+.bp4-card {
+  box-shadow: var(--freebooks-raised);
+}
+.sidebar {
+  background: linear-gradient(170deg, #092c3e 0%, #071d31 65%, #062b33 100%);
+}
+body.bp4-dark .sidebar {
+  background: linear-gradient(170deg, #082c3b 0%, #061522 70%, #092b2b 100%);
+}
+.sidebar-menu .bp4-menu-item {
+  min-height: 39px;
+  display: flex;
+  align-items: center;
+}
+.sidebar-menu .bp4-menu-item.bp4-active.bp4-intent-primary {
+  background: rgba(68, 215, 179, 0.17);
+}
+.preferences-topbar,
+.preferences-page__inside-content,
+.dashboard__actions-bar {
+  min-width: 0;
+}
+.freebooks-mobile-dock,
+.freebooks-mobile-scrim {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  html,
+  body,
+  #root,
+  .App {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0 !important;
+  }
+  body {
+    overflow: hidden;
+  }
+  .dashboard-layout,
+  .dashboard-layout__main,
+  .dashboard-layout__main > .SplitPane {
+    width: 100% !important;
+    height: 100dvh !important;
+    min-width: 0 !important;
+  }
+  .dashboard-layout__main > .SplitPane.primary > .Pane1 {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: min(84vw, 320px) !important;
+    height: 100dvh !important;
+    transform: translateX(0);
+    transition: transform 180ms ease;
+    z-index: 1202;
+    box-shadow: 10px 0 36px rgba(0, 0, 0, 0.27);
+    overflow: hidden;
+  }
+  body.has-mini-sidebar .dashboard-layout__main > .SplitPane.primary > .Pane1 {
+    transform: translateX(-105%);
+    pointer-events: none;
+  }
+  .dashboard-layout__main > .SplitPane.primary > .Pane2 {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 100dvh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .dashboard-layout__main .Resizer {
+    display: none !important;
+  }
+  .dashboard-content,
+  .dashboard-content--preferences {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+  .dashboard__page,
+  .dashboard__page-content,
+  .dashboard__insider {
+    min-width: 0 !important;
+    max-width: 100%;
+  }
+  .dashboard__topbar {
+    position: sticky;
+    top: 0;
+    min-height: 58px;
+    padding: 0 10px 0 2px;
+    backdrop-filter: blur(16px);
+  }
+  .dashboard__topbar-left,
+  .dashboard__topbar-right {
+    min-width: 0;
+    align-items: center;
+  }
+  .dashboard__topbar-sidebar-toggle .bp4-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .dashboard__title {
+    min-width: 0;
+    margin-left: 4px;
+  }
+  .dashboard__title h1 {
+    font-size: 17px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: min(58vw, 290px);
+  }
+  .dashboard__breadcrumbs,
+  .dashboard__hint,
+  .dashboard__topbar-navbar {
+    display: none !important;
+  }
+  .dashboard__topbar-user {
+    margin-right: 2px;
+  }
+  .dashboard__actions-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .dashboard__actions-bar .bp4-navbar {
+    width: max-content;
+    min-width: 100%;
+    padding: 0 8px;
+  }
+  .dashboard__actions-bar .bp4-navbar-group {
+    flex-wrap: nowrap;
+  }
+  .dashboard__actions-bar .bp4-button,
+  .navbar--dashboard-views .bp4-button {
+    min-height: 42px;
+  }
+  .dashboard__datatable {
+    margin: 12px 10px 20px;
+    max-width: calc(100vw - 20px);
+    min-width: 0;
+    overflow-x: auto;
+    border-radius: 12px;
+  }
+  .dashboard__datatable .bigcapital-datatable,
+  .dashboard__page-content .bigcapital-datatable {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .bigcapital-datatable .table {
+    min-width: 660px;
+  }
+  .dashboard__page-content > .bp4-card,
+  .preferences-page__inside-content .bp4-card {
+    max-width: calc(100vw - 20px);
+  }
+  .dashboard__views-tabs,
+  .navbar--dashboard-views {
+    max-width: 100vw;
+    overflow-x: auto;
+  }
+  .preferences-page {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .preferences-sidebar {
+    position: relative !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 92px !important;
+    flex: 0 0 92px;
+    overflow: hidden;
+  }
+  .preferences-sidebar__wrapper,
+  .preferences-sidebar__inner {
+    height: 92px !important;
+  }
+  .preferences-sidebar__head {
+    height: 34px;
+    padding: 0 15px;
+  }
+  .preferences-sidebar__head h2 {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .preferences-sidebar__menu.bp4-menu {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    width: max-content;
+    padding: 0 8px;
+  }
+  .preferences-sidebar__menu .bp4-menu-divider {
+    display: none;
+  }
+  .preferences-sidebar__menu .bp4-menu-item {
+    min-height: 44px;
+    border-radius: 8px;
+    padding: 9px 12px;
+  }
+  .preferences-page__content {
+    margin-left: 0 !important;
+    min-width: 0;
+    width: 100%;
+  }
+  .preferences-topbar {
+    min-height: 54px;
+    flex-basis: 54px;
+    padding: 0 10px;
+  }
+  .preferences-topbar__title h2 {
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .preferences-topbar__actions {
+    max-width: 52vw;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-right: 4px;
+    padding-right: 4px;
+  }
+  .preferences-page__inside-content {
+    max-width: 100vw;
+    overflow-x: auto;
+  }
+  .preferences-page__inside-content--tabable {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .bp4-dialog {
+    width: calc(100vw - 20px) !important;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+  }
+  .bp4-drawer {
+    max-width: 100vw !important;
+  }
+  .freebooks-mobile-scrim.is-open {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1201;
+    border: 0;
+    background: rgba(3, 21, 32, 0.54);
+    cursor: pointer;
+  }
+  .freebooks-mobile-dock {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-height: calc(64px + env(safe-area-inset-bottom));
+    padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+    z-index: 1100;
+    background: var(--freebooks-dock);
+    box-shadow: 0 -7px 24px rgba(3, 25, 35, 0.14);
+    border-top: 1px solid var(--color-dashboard-card-border);
+  }
+  .freebooks-mobile-dock a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    min-width: 0;
+    min-height: 52px;
+    border-radius: 10px;
+    color: var(--color-dashboard-navbar-item-text);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 650;
+    line-height: 1.1;
+  }
+  .freebooks-mobile-dock a span {
+    font-size: 23px;
+    line-height: 1.1;
+    font-weight: 400;
+  }
+  .freebooks-mobile-dock a.is-active,
+  .freebooks-mobile-dock a:hover {
+    background: var(--color-dashboard-navbar-item-active-background);
+    color: var(--color-dashboard-navbar-item-active-text);
+  }
+}
+@media (max-width: 420px) {
+  .dashboard__title h1 {
+    max-width: 53vw;
+  }
+  .dashboard__datatable {
+    margin: 9px 6px 18px;
+    max-width: calc(100vw - 12px);
+  }
+  .banking-review-toolbar {
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+}
+
+.freebooks-workspace-nav {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 9px;
+  margin-right: 10px;
+}
+.freebooks-workspace-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 9px;
+  color: var(--color-dashboard-navbar-item-text);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.freebooks-workspace-nav a:hover,
+.freebooks-workspace-nav a.is-active {
+  background: var(--color-dashboard-navbar-item-active-background);
+  color: var(--color-dashboard-navbar-item-active-text);
+}
+@media (max-width: 1250px) {
+  .freebooks-workspace-nav {
+    display: none;
+  }
+}
+
+.freebooks-install-link {
+  display: inline-block;
+  margin: -5px 16px 14px;
+  color: #86dfca;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.freebooks-install-link:hover {
+  color: #c5ffef;
+  text-decoration: underline;
+}
+.sidebar--mini-sidebar .freebooks-install-link {
+  display: none;
+}
+
+.freebooks-import-guide {
+  margin: 14px 20px 18px;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 13px;
+  background: var(--color-dashboard-card-background);
+  box-shadow: var(--freebooks-raised);
+}
+.freebooks-import-guide summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 58px;
+  padding: 12px 18px;
+  cursor: pointer;
+  list-style: none;
+}
+.freebooks-import-guide summary::-webkit-details-marker {
+  display: none;
+}
+.freebooks-import-guide summary::after {
+  content: 'Show guide';
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.freebooks-import-guide[open] summary::after {
+  content: 'Hide guide';
+}
+.freebooks-import-guide__title {
+  color: var(--color-dashboard-topbar-title-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+.freebooks-import-guide__hint {
+  flex: 1;
+  color: var(--color-datatable-head-text);
+  font-size: 12px;
+}
+.freebooks-import-guide__body {
+  padding: 2px 18px 14px;
+  border-top: 1px solid var(--color-dashboard-card-border);
+  line-height: 1.5;
+}
+.freebooks-import-guide__body ol {
+  padding-left: 20px;
+}
+@media (max-width: 800px) {
+  .freebooks-import-guide {
+    margin: 9px 10px 15px;
+  }
+  .freebooks-import-guide summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 14px;
+    min-height: 0;
+  }
+  .freebooks-import-guide summary::after {
+    align-self: flex-start;
+    margin-top: 3px;
+  }
+  .freebooks-import-guide__body {
+    padding: 4px 14px 14px;
+  }
+}
+
+@media (max-width: 800px) {
+  .freebooks-bank-grid {
+    margin: 6px 10px 20px !important;
+    min-width: 0;
+  }
+  .freebooks-bank-grid__list {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin: 0 !important;
+    width: 100%;
+  }
+  .freebooks-bank-grid__list > * {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+  .freebooks-bank-grid .freebooks-bank-account {
+    box-sizing: border-box;
+    margin: 0 !important;
+    width: 100% !important;
+    height: 148px;
+    border-radius: 12px;
+  }
+}

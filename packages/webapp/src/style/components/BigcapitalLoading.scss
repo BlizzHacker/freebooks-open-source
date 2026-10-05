@@ -1,0 +1,23 @@
+@import '@/style/variables.scss';
+
+.bigcapital-loading {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  background: var(--color-splash-screen-background);
+  z-index: $zindex-dashboard-splash-screen;
+
+  .center {
+    width: auto;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text {
+    margin-top: 12px;
+    opacity: 0.85;
+    display: none;
+  }
+}

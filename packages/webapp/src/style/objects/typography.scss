@@ -1,0 +1,36 @@
+
+
+body{
+  color: #1f3255;
+
+  [lang='ar'] &{
+    font-size: 15px;
+  }
+}
+
+.#{$ns}-heading{
+  font-weight: 600;
+}
+
+.divider{
+  border-top: 1px solid #e8e8e8;
+  height: 1px;
+}
+
+.paragraph{
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+ul.list{
+  margin-bottom: 10px;
+  padding-left: 25px;
+
+  li{
+    margin-bottom: 10px;
+
+    &::marker{
+      color: #666;
+    }
+  }
+}

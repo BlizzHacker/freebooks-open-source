@@ -1,0 +1,83 @@
+@import '../../_base.scss';
+
+// Preferences sidebar.
+// -----------------------------
+.preferences-sidebar {
+  background: var(--color-sidebar-preferences-background);
+  border-right: 1px solid var(--color-sidebar-preferences-border);
+  min-width: 220px;
+  max-width: 220px;
+  height: 100%;
+  position: fixed;
+
+  &__wrapper {
+    height: 100%;
+  }
+
+  .ScrollbarsCustom-Track {
+
+    &.ScrollbarsCustom-TrackY,
+    &.ScrollbarsCustom-TrackX {
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+
+  .ScrollbarsCustom-Thumb {
+
+    &.ScrollbarsCustom-ThumbX,
+    &.ScrollbarsCustom-ThumbY {
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+
+  &:hover {
+    .ScrollbarsCustom-Thumb {
+
+      &.ScrollbarsCustom-ThumbX,
+      &.ScrollbarsCustom-ThumbY {
+        background: rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    padding: 0 22px;
+    border-bottom: 1px solid var(--color-preferences-sidebar-head-border);
+
+    h2 {
+      font-size: 22px;
+      color: var(--color-preferences-sidebar-head-text);
+      font-weight: 400;
+      margin: 0;
+    }
+  }
+
+  &__menu {
+    padding: 0;
+    background: transparent;
+
+    &.#{$ns}-menu {
+      &,
+      .bp4-dark & {
+        background: transparent;
+      }
+    }
+
+    .#{$ns}-menu-item {
+      padding: 8px 18px;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--color-sidebar-preferences-item-text);
+
+      &:hover,
+      &.#{$ns}-active {
+        background-color: var(--color-sidebar-preferences-item-hover-background);
+        color: var(--color-sidebar-preferences-item-hover-text);
+      }
+    }
+  }
+}

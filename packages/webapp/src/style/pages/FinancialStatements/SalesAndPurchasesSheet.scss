@@ -1,0 +1,36 @@
+.financial-sheet {
+  &--sales-by-items,
+  &--purchases-by-items,
+  &--inventory-valuation {
+    min-width: 800px;
+
+    .financial-sheet__table {
+      .thead,
+      .tbody {
+        .tr .td:not(:first-child),
+        .tr .th:not(:first-child) {
+          text-align: right;
+        }
+      }
+      
+    }
+  }
+}
+
+.financial-statement--sales-by-items,
+.financial-statement--purchases-by-items {
+  .financial-header-drawer {
+    .bp4-drawer {
+      // max-height: 400px;
+      max-height: 450px;
+    }
+  }
+}
+
+.financial-statement--inventory-valuation {
+  .financial-header-drawer {
+    .bp4-drawer {
+      max-height: 400px;
+    }
+  }
+}

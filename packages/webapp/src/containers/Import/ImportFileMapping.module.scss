@@ -1,0 +1,55 @@
+.group {
+  margin-top: 1.4rem;
+}
+
+.groupTitle {
+  margin-bottom: 1.2rem;
+  color: #738091;
+  font-weight: 700;
+  padding: 0 11px;
+
+  :global(.bp4-dark) &{
+    color: var(--color-light-gray1);
+  }
+}
+
+.table {
+  width: 100%;
+
+  th.label,
+  td.label{
+    width: 32% !important;
+  }
+
+  thead{
+    th{
+      border-top: 1px solid #d9d9da;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      color: #738091;
+      font-weight: 500;
+
+      :global(.bp4-dark) &{
+        color: var(--color-light-gray1);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+  
+  tbody{
+    tr td {
+      vertical-align: middle;
+    }
+
+    tr td{
+      :global(.bp4-popover-target .bp4-button),
+      :global(.bp4-popover-wrapper){
+        max-width: 250px;
+      }
+    }
+  }
+}
+
+.requiredSign{
+  color: rgb(250, 82, 82);
+}

@@ -1,0 +1,174 @@
+import { I18nService } from 'nestjs-i18n';
+import { constant, flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
+import {
+  IVendorBalanceSummaryData,
+  IVendorBalanceSummaryVendor,
+  IVendorBalanceSummaryTotal,
+  IVendorBalanceSummaryQuery,
+} from './VendorBalanceSummary.types';
+import {
+  ITableRow,
+  ITableColumn,
+  IColumnMapperMeta,
+} from '../../types/Table.types';
+import { tableMapper, tableRowMapper } from '../../utils/Table.utils';
+import { CONTACT_BALANCE_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
+
+enum TABLE_ROWS_TYPES {
+  VENDOR = 'VENDOR',
+  TOTAL = 'TOTAL',
+}
+
+export class VendorBalanceSummaryTable {
+  private readonly i18n: I18nService;
+  private readonly report: IVendorBalanceSummaryData;
+  private readonly query: IVendorBalanceSummaryQuery;
+
+  /**
+   * Constructor method.
+   * @param {IVendorBalanceSummaryData} report - Report.
+   * @param {IVendorBalanceSummaryQuery} query - Query.
+   * @param {I18nService} i18n - I18n service.
+   */
+  constructor(
+    report: IVendorBalanceSummaryData,
+    query: IVendorBalanceSummaryQuery,
+    i18n: I18nService,
+  ) {
+    this.report = report;
+    this.query = query;
+    this.i18n = i18n;
+  }
+
+  /**
+   * Retrieve percentage columns accessor.
+   * @returns {IColumnMapperMeta[]}
+   */
+  private getPercentageColumnsAccessor = (): IColumnMapperMeta[] => {
+    return [
+      {
+        key: 'percentageOfColumn',
+        accessor: 'percentageOfColumn.formattedAmount',
+      },
+    ];
+  };
+
+  /**
+   * Retrieve vendor node columns accessor.
+   * @returns {IColumnMapperMeta[]}
+   */
+  private getVendorColumnsAccessor = (): IColumnMapperMeta[] => {
+    const columns = [
+      { key: CONTACT_BALANCE_COLUMN_KEYS.NAME, accessor: 'vendorName' },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        accessor: 'total.formattedAmount',
+      },
+    ];
+    return flow(
+      when(
+        constant(this.query.percentageColumn),
+        (cols: IColumnMapperMeta[]) => [
+          ...this.getPercentageColumnsAccessor(),
+          ...cols,
+        ],
+      ),
+      (cols: IColumnMapperMeta[]): IColumnMapperMeta[] => [...columns, ...cols],
+    )([]);
+  };
+
+  /**
+   * Transformes the vendors to table rows.
+   * @param {IVendorBalanceSummaryVendor[]} vendors
+   * @returns {ITableRow[]}
+   */
+  private vendorsTransformer = (
+    vendors: IVendorBalanceSummaryVendor[],
+  ): ITableRow[] => {
+    const columns = this.getVendorColumnsAccessor();
+
+    return tableMapper(vendors, columns, {
+      rowTypes: [TABLE_ROWS_TYPES.VENDOR],
+    });
+  };
+
+  /**
+   * Retrieve total node columns accessor.
+   * @returns {IColumnMapperMeta[]}
+   */
+  private getTotalColumnsAccessor = (): IColumnMapperMeta[] => {
+    const columns = [
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.NAME,
+        value: this.i18n.t('contact_summary_balance.total'),
+      },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        accessor: 'total.formattedAmount',
+      },
+    ];
+    return flow(
+      when(
+        constant(this.query.percentageColumn),
+        (cols: IColumnMapperMeta[]) => [
+          ...this.getPercentageColumnsAccessor(),
+          ...cols,
+        ],
+      ),
+      (cols: IColumnMapperMeta[]): IColumnMapperMeta[] => [...columns, ...cols],
+    )([]);
+  };
+
+  /**
+   * Transformes the total to table row.
+   * @param   {IVendorBalanceSummaryTotal} total
+   * @returns {ITableRow}
+   */
+  private totalTransformer = (total: IVendorBalanceSummaryTotal): ITableRow => {
+    const columns = this.getTotalColumnsAccessor();
+
+    return tableRowMapper(total, columns, {
+      rowTypes: [TABLE_ROWS_TYPES.TOTAL],
+    });
+  };
+
+  /**
+   * Transformes the vendor balance summary to table rows.
+   * @param {IVendorBalanceSummaryData} vendorBalanceSummary
+   * @returns {ITableRow[]}
+   */
+  public tableRows = (): ITableRow[] => {
+    const vendors = this.vendorsTransformer(this.report.vendors);
+    const total = this.totalTransformer(this.report.total);
+
+    return vendors.length > 0 ? [...vendors, total] : [];
+  };
+
+  /**
+   * Retrieve the report statement columns
+   * @returns {ITableColumn[]}
+   */
+  public tableColumns = (): ITableColumn[] => {
+    const columns: ITableColumn[] = [
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.NAME,
+        label: this.i18n.t('contact_summary_balance.account_name'),
+      },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        label: this.i18n.t('contact_summary_balance.total'),
+      },
+    ];
+    return when(
+      constant(this.query.percentageColumn),
+      (cols: ITableColumn[]) => [
+        ...cols,
+        {
+          key: CONTACT_BALANCE_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
+          label: this.i18n.t('contact_summary_balance.percentage_column'),
+        } as ITableColumn,
+      ],
+    )(columns);
+  };
+}

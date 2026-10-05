@@ -1,0 +1,26 @@
+
+// Blueprint framework.
+// @import '@blueprintjs/core/src/blueprint.scss';
+
+.dashboard__insider--items-list {
+  .bigcapital-datatable {
+    .table {
+      .tbody {
+        .item_type.td {
+          .bp4-tag {
+            font-size: 13px;
+          }
+        }
+        .tr.inactive .td {
+
+          &.normal .bp4-icon {
+            color: #9eaab6;
+          }
+        }
+        .quantity_on_hand {
+          color: #ff0000;
+        }
+      }
+    }
+  }
+}

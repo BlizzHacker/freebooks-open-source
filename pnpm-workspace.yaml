@@ -1,0 +1,14 @@
+packages:
+  # all packages in direct subdirs of packages/
+  - 'packages/*'
+  - 'shared/*'
+allowBuilds:
+  '@nestjs/core': set this to true or false
+  bcrypt: true
+  core-js: set this to true or false
+  core-js-pure: set this to true or false
+  es5-ext: set this to true or false
+  esbuild: set this to true or false
+  msgpackr-extract: set this to true or false
+  nx: set this to true or false
+  react-intl-universal: set this to true or false

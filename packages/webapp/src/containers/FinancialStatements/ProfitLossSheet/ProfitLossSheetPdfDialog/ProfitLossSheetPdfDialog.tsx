@@ -1,0 +1,45 @@
+import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
+import { Dialog, DialogSuspense } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
+import { CLASSES } from '@/constants/classes';
+
+const ProfitLossSheetPdfDialogContent = lazy(() =>
+  import('./ProfitLossSheetPdfDialogContent').then((mod) => ({
+    default: mod.ProfitLossSheetPdfDialogContent,
+  })),
+);
+
+interface ProfitLossSheetPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
+
+function ProfitLossSheetPdfDialogRoot({
+  dialogName,
+  isOpen,
+  payload,
+}: ProfitLossSheetPdfDialogRootProps) {
+  return (
+    <Dialog
+      name={dialogName}
+      title={'Profit/LossSheet Print Preview'}
+      className={classNames(CLASSES.DIALOG_PDF_PREVIEW)}
+      autoFocus={true}
+      canEscapeKeyClose={true}
+      isOpen={isOpen}
+      style={{ width: '1000px' }}
+    >
+      <DialogSuspense>
+        <ProfitLossSheetPdfDialogContent />
+      </DialogSuspense>
+    </Dialog>
+  );
+}
+
+export const ProfitLossSheetPdfDialog = FF.pipe(
+  ProfitLossSheetPdfDialogRoot,
+  withDialogRedux(),
+);

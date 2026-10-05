@@ -1,0 +1,24 @@
+.detail_panel {
+  :global .card {
+    padding: 22px 15px;
+    margin: 15px;
+  }
+
+  &_header {
+    margin-bottom: 30px;
+  }
+
+  &_table {
+    :global .bigcapital-datatable {
+      margin-top: 30px;
+      .thead,
+      .tbody {
+        .quantity,
+        .cost,
+        .value {
+          text-align: right;
+        }
+      }
+    }
+  }
+}

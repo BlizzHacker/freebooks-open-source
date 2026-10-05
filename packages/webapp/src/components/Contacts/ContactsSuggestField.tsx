@@ -1,0 +1,107 @@
+// @ts-nocheck
+import { MenuItem } from '@blueprintjs/core';
+import { Suggest } from '@blueprintjs/select';
+import classNames from 'classnames';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import intl from 'react-intl-universal';
+import { FormattedMessage as T } from '@/components';
+import { CLASSES } from '@/constants/classes';
+
+export function ContactsSuggestField({
+  contactsList,
+  initialContactId,
+  selectedContactId,
+  defaultTextSelect = intl.get('select_contact'),
+  onContactSelected,
+
+  selectedContactType = [],
+  popoverFill = false,
+
+  ...suggestProps
+}) {
+  // filteredContacts
+  const contacts = useMemo(
+    () =>
+      contactsList.map((contact) => ({
+        ...contact,
+        _id: `${contact.id}_${contact.contactType}`,
+      })),
+    [contactsList],
+  );
+
+  const initialContact = useMemo(
+    () => contacts.find((a) => a.id === initialContactId),
+    [initialContactId, contacts],
+  );
+
+  const [selecetedContact, setSelectedContact] = useState(
+    initialContact || null,
+  );
+
+  useEffect(() => {
+    if (typeof selectedContactId !== 'undefined') {
+      const contact = selectedContactId
+        ? contacts.find((a) => a.id === selectedContactId)
+        : null;
+      setSelectedContact(contact);
+    }
+  }, [selectedContactId, contacts, setSelectedContact]);
+
+  const contactRenderer = useCallback(
+    (contact, { handleClick }) => (
+      <MenuItem
+        key={contact.id}
+        text={contact.displayName}
+        label={contact.formattedContactService}
+        onClick={handleClick}
+      />
+    ),
+    [],
+  );
+
+  const onContactSelect = useCallback(
+    (contact) => {
+      setSelectedContact({ ...contact });
+      onContactSelected && onContactSelected(contact);
+    },
+    [setSelectedContact, onContactSelected],
+  );
+
+  const handleInputValueRenderer = (inputValue) => {
+    if (inputValue) {
+      return inputValue.displayName.toString();
+    }
+  };
+
+  const filterContacts = (query, contact, index, exactMatch) => {
+    const normalizedTitle = contact.displayName.toLowerCase();
+    const normalizedQuery = query.toLowerCase();
+    if (exactMatch) {
+      return normalizedTitle === normalizedQuery;
+    } else {
+      return (
+        `${contact.displayName} ${normalizedTitle}`.indexOf(normalizedQuery) >=
+        0
+      );
+    }
+  };
+
+  return (
+    <Suggest
+      items={contacts}
+      noResults={<MenuItem disabled={true} text={<T id={'no_results'} />} />}
+      itemRenderer={contactRenderer}
+      itemPredicate={filterContacts}
+      onItemSelect={onContactSelect}
+      selectedItem={selecetedContact}
+      inputProps={{ placeholder: defaultTextSelect }}
+      resetOnClose={true}
+      popoverProps={{ minimal: true, boundary: 'window' }}
+      inputValueRenderer={handleInputValueRenderer}
+      className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
+        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
+      })}
+      {...suggestProps}
+    />
+  );
+}

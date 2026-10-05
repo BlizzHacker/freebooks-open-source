@@ -1,0 +1,15 @@
+
+// Blueprint framework.
+// @import '@blueprintjs/core/src/blueprint.scss';
+
+.dashboard__insider--inventory-adjustments-list {
+  .bigcapital-datatable {
+    .table {
+      .tbody {
+        .tr .td{
+          padding: 0.88rem 0.5rem;
+        }
+      }
+    }
+  }
+}

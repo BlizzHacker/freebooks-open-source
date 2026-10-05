@@ -1,0 +1,13 @@
+@import '../../_base.scss';
+
+body.page-vendor-new,
+body.page-vendor-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
+}
+
+.dashboard__insider--vendor-form{
+  padding-bottom: 64px;
+}

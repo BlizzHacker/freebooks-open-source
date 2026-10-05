@@ -1,0 +1,14 @@
+{
+  "opening_balance": "Opening balance",
+  "closing_balance": "Closing balance",
+  "date": "Date",
+  "transaction_type": "Transaction type",
+  "transaction_number": "Transaction #",
+  "quantity": "Quantity",
+  "rate": "Rate",
+  "total": "Total",
+  "value": "Value",
+  "profit_margin": "Profit Margin",
+  "running_quantity": "Running quantity",
+  "running_value": "Running Value"
+}

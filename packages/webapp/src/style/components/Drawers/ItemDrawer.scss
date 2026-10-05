@@ -1,0 +1,44 @@
+.item-drawer {
+  .card {
+    margin: 15px;
+    padding: 22px 15px;
+  }
+
+  &__content {
+    .detail-item--name {
+      width: 30%;
+
+      .detail-item__content {
+        font-weight: 600;
+      }
+    }
+
+    .detail-item--quantity {
+      .detail-item__content {
+        font-weight: 600;
+
+        .mines {
+          color: #c23030;
+        }
+      }
+    }
+
+    .details-menu--vertical {
+      --x-border-color: #e2e2e2;
+      --x-border-color: rgba(255, 255, 255, 0.2);
+
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--x-border-color);
+    }
+
+    .details-menu--horizantal {
+      .detail-item:not(:first-of-type) {
+        margin-top: 16px;
+      }
+
+      .detail-item__label {
+        min-width: 180px;
+      }
+    }
+  }
+}

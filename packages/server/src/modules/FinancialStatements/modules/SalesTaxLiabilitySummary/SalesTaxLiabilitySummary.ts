@@ -1,0 +1,137 @@
+import { flow } from 'fp-ts/function';
+import * as A from 'fp-ts/Array';
+import { isEmpty, sumBy } from 'lodash';
+import {
+  SalesTaxLiabilitySummaryQuery,
+  SalesTaxLiabilitySummaryRate,
+  SalesTaxLiabilitySummaryReportData,
+  SalesTaxLiabilitySummaryTotal,
+} from './SalesTaxLiability.types';
+import { FinancialSheet } from '../../common/FinancialSheet';
+import { ModelObject } from 'objection';
+import { TaxRateModel } from '@/modules/TaxRates/models/TaxRate.model';
+import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
+
+export class SalesTaxLiabilitySummary extends FinancialSheet {
+  private query: SalesTaxLiabilitySummaryQuery;
+  private repository: SalesTaxLiabilitySummaryRepository;
+
+  /**
+   * Sales tax liability summary constructor.
+   * @param {SalesTaxLiabilitySummaryQuery} query
+   * @param {SalesTaxLiabilitySummaryRepository} repository
+   * @param {IFinancialReportMeta} meta
+   */
+  constructor(
+    query: SalesTaxLiabilitySummaryQuery,
+    repository: SalesTaxLiabilitySummaryRepository,
+    meta: IFinancialReportMeta,
+  ) {
+    super();
+
+    this.query = query;
+    this.repository = repository;
+    this.baseCurrency = meta.baseCurrency;
+    this.dateFormat = meta.dateFormat || DEFAULT_REPORT_META.dateFormat;
+    this.numberFormat = {
+      ...this.numberFormat,
+      ...this.query.numberFormat,
+    };
+  }
+
+  /**
+   * Retrieves the tax rate liability node.
+   * @param {ITaxRate} taxRate
+   * @returns {SalesTaxLiabilitySummaryRate}
+   */
+  private taxRateLiability = (
+    taxRate: ModelObject<TaxRateModel>,
+  ): SalesTaxLiabilitySummaryRate => {
+    const payableTax = this.repository.taxesPayableByTaxRateId[taxRate.id];
+    const salesTax = this.repository.accountTransactionsByTaxRateId[taxRate.id];
+
+    const payableTaxAmount = payableTax
+      ? payableTax.credit - payableTax.debit
+      : 0;
+    const salesTaxAmount = salesTax ? salesTax.credit - salesTax.debit : 0;
+
+    // Calculates the tax percentage.
+    const taxPercentage = this.getPercentageBasis(
+      salesTaxAmount,
+      payableTaxAmount,
+    );
+
+    // Calculates the payable tax amount.
+    const collectedTaxAmount = payableTax ? payableTax.debit : 0;
+
+    return {
+      id: taxRate.id,
+      taxName: `${taxRate.name} (${taxRate.rate}%)`,
+      taxableAmount: this.getAmountMeta(salesTaxAmount),
+      taxAmount: this.getAmountMeta(payableTaxAmount),
+      taxPercentage: this.getPercentageTotalAmountMeta(taxPercentage),
+      collectedTaxAmount: this.getAmountMeta(collectedTaxAmount),
+    };
+  };
+
+  /**
+   * Filters the non-transactions tax rates.
+   * @param {SalesTaxLiabilitySummaryRate[]} nodes
+   * @returns {SalesTaxLiabilitySummaryRate[]}
+   */
+  private filterNonTransactionsTaxRates = (
+    nodes: SalesTaxLiabilitySummaryRate[],
+  ): SalesTaxLiabilitySummaryRate[] => {
+    return nodes.filter((node) => {
+      const salesTrxs = this.repository.accountTransactionsByTaxRateId[node.id];
+      const payableTrxs = this.repository.taxesPayableByTaxRateId[node.id];
+
+      return !isEmpty(salesTrxs) || !isEmpty(payableTrxs);
+    });
+  };
+
+  /**
+   * Retrieves the tax rates liability nodes.
+   * @returns {SalesTaxLiabilitySummaryRate[]}
+   */
+  private taxRatesLiability = (): SalesTaxLiabilitySummaryRate[] => {
+    return flow(
+      A.map(this.taxRateLiability),
+      this.filterNonTransactionsTaxRates,
+    )(this.repository.taxRates);
+  };
+
+  /**
+   * Retrieves the tax rates total node.
+   * @param {SalesTaxLiabilitySummaryRate[]} nodes
+   * @returns {SalesTaxLiabilitySummaryTotal}
+   */
+  private taxRatesTotal = (
+    nodes: SalesTaxLiabilitySummaryRate[],
+  ): SalesTaxLiabilitySummaryTotal => {
+    const taxableAmount = sumBy(nodes, 'taxableAmount.amount');
+    const taxAmount = sumBy(nodes, 'taxAmount.amount');
+    const collectedTaxAmount = sumBy(nodes, 'collectedTaxAmount.amount');
+
+    return {
+      taxableAmount: this.getTotalAmountMeta(taxableAmount),
+      taxAmount: this.getTotalAmountMeta(taxAmount),
+      collectedTaxAmount: this.getTotalAmountMeta(collectedTaxAmount),
+    };
+  };
+
+  /**
+   * Retrieves the report data.
+   * @returns {SalesTaxLiabilitySummaryReportData}
+   */
+  public reportData = (): SalesTaxLiabilitySummaryReportData => {
+    const taxRates = this.taxRatesLiability();
+    const total = this.taxRatesTotal(taxRates);
+
+    return { taxRates, total };
+  };
+}

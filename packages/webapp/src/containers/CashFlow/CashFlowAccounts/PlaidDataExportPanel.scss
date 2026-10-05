@@ -1,0 +1,124 @@
+.freebooks-plaid-export {
+  margin-top: 20px;
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 16px;
+  background: var(--color-dashboard-card-background);
+  color: var(--color-bank-account-card-text);
+}
+
+.freebooks-plaid-export__header,
+.freebooks-plaid-export__account,
+.freebooks-plaid-export__actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.freebooks-plaid-export__header h2 {
+  margin: 3px 0 7px;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.freebooks-plaid-export__header p,
+.freebooks-plaid-export__note,
+.freebooks-plaid-export__empty {
+  color: var(--color-dashboard-navbar-item-text);
+  line-height: 1.55;
+}
+
+.freebooks-plaid-export__eyebrow {
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.freebooks-plaid-export__counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.freebooks-plaid-export__counts > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 15px;
+  border: 1px solid var(--color-dashboard-card-border);
+  border-radius: 12px;
+}
+
+.freebooks-plaid-export__counts strong {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.freebooks-plaid-export__counts span,
+.freebooks-plaid-export__account small {
+  color: var(--color-dashboard-navbar-item-text);
+  font-size: 12px;
+}
+
+.freebooks-plaid-export__accounts {
+  margin: 18px 0;
+}
+
+.freebooks-plaid-export__accounts h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.freebooks-plaid-export__account {
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-dashboard-card-border);
+}
+
+.freebooks-plaid-export__account > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.freebooks-plaid-export__actions {
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.freebooks-plaid-export__actions .bp4-button {
+  min-height: 40px;
+}
+
+.freebooks-plaid-export__message {
+  margin-top: 14px;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .freebooks-plaid-export__counts {
+    grid-template-columns: 1fr;
+  }
+
+  .freebooks-plaid-export__account {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .freebooks-plaid-export__account .bp4-button,
+  .freebooks-plaid-export__actions .bp4-button {
+    width: 100%;
+  }
+
+  .freebooks-plaid-export__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

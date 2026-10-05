@@ -1,0 +1,456 @@
+import * as moment from 'moment';
+import { constant, flow } from 'fp-ts/function';
+import { defaultTo, sumBy, get } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
+import {
+  IInventoryDetailsQuery,
+  IInventoryDetailsNumber,
+  IInventoryDetailsDate,
+  IInventoryDetailsData,
+  IInventoryDetailsItem,
+  IInventoryDetailsClosing,
+  IInventoryDetailsOpening,
+  IInventoryDetailsItemTransaction,
+} from './InventoryItemDetails.types';
+import { ModelObject } from 'objection';
+import { Item } from '@/modules/Items/models/Item';
+import {
+  IFormatNumberSettings,
+  INumberFormatQuery,
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
+import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
+import { InventoryItemDetailsRepository } from './InventoryItemDetailsRepository';
+import { TInventoryTransactionDirection } from '@/modules/InventoryCost/types/InventoryCost.types';
+import { FinancialSheet } from '../../common/FinancialSheet';
+import { filterDeep } from '@/utils/deepdash';
+import { ifElse, when } from '@/common/fp';
+import { INodeTypes, MAP_CONFIG } from './constant';
+
+type TInventoryDetailsNodeChildren =
+  | IInventoryDetailsItemTransaction
+  | IInventoryDetailsOpening
+  | IInventoryDetailsClosing;
+
+export class InventoryDetails extends FinancialSheet {
+  readonly repository: InventoryItemDetailsRepository;
+  readonly query: IInventoryDetailsQuery;
+  readonly numberFormat: INumberFormatQuery;
+  readonly i18n: I18nService;
+
+  /**
+   * Constructor method.
+   * @param {InventoryItemDetailsRepository} repository - The repository.
+   * @param {I18nService} i18n - The i18n service.
+   * @param {IFinancialReportMeta} meta - Report meta.
+   */
+  constructor(
+    filter: IInventoryDetailsQuery,
+    repository: InventoryItemDetailsRepository,
+    i18n: I18nService,
+    meta: IFinancialReportMeta,
+  ) {
+    super();
+
+    this.repository = repository;
+
+    this.query = filter;
+    this.numberFormat = this.query.numberFormat;
+    this.i18n = i18n;
+    this.dateFormat = meta.dateFormat || DEFAULT_REPORT_META.dateFormat;
+  }
+
+  /**
+   * Retrieve the number meta.
+   * @param {number} number
+   * @returns
+   */
+  public getNumberMeta(
+    number: number,
+    settings?: IFormatNumberSettings,
+  ): IInventoryDetailsNumber {
+    return {
+      formattedNumber: this.formatNumber(number, {
+        excerptZero: true,
+        money: false,
+        ...settings,
+      }),
+      number: number,
+    };
+  }
+
+  /**
+   * Retrieve the total number meta.
+   * @param {number} number -
+   * @param {IFormatNumberSettings} settings -
+   * @retrun {IInventoryDetailsNumber}
+   */
+  public getTotalNumberMeta(
+    number: number,
+    settings?: IFormatNumberSettings,
+  ): IInventoryDetailsNumber {
+    return this.getNumberMeta(number, { excerptZero: false, ...settings });
+  }
+
+  /**
+   * Retrieve the date meta.
+   * @param {Date|string} date
+   * @returns {IInventoryDetailsDate}
+   */
+  public getDateMeta(date: Date | string): IInventoryDetailsDate {
+    return {
+      formattedDate: moment(date).format(this.dateFormat),
+      date: moment(date).toDate(),
+    };
+  }
+
+  /**
+   * Adjusts the movement amount.
+   * @param {number} amount - The amount.
+   * @param {TInventoryTransactionDirection} direction - The transaction direction.
+   * @returns {number}
+   */
+  public adjustAmountMovement =
+    (direction: TInventoryTransactionDirection) =>
+    (amount: number): number => {
+      return direction === 'OUT' ? amount * -1 : amount;
+    };
+
+  /**
+   * Accumulate and mapping running quantity on transactions.
+   * @param {IInventoryDetailsItemTransaction[]} transactions
+   * @returns {IInventoryDetailsItemTransaction[]}
+   */
+  public mapAccumTransactionsRunningQuantity = (
+    transactions: IInventoryDetailsItemTransaction[],
+  ): IInventoryDetailsItemTransaction[] => {
+    const initial = this.getNumberMeta(0);
+
+    return transactions.reduce<
+      [
+        { runningQuantity: IInventoryDetailsNumber },
+        IInventoryDetailsItemTransaction[],
+      ]
+    >(
+      ([a, mapped], b) => {
+        const total = a.runningQuantity.number + b.quantityMovement.number;
+        const totalMeta = this.getNumberMeta(total, { excerptZero: false });
+        const accum = { ...b, runningQuantity: totalMeta };
+
+        return [accum, [...mapped, accum]];
+      },
+      [{ runningQuantity: initial }, []],
+    )[1];
+  };
+
+  /**
+   * Accumulate and mapping running valuation on transactions.
+   * @param {IInventoryDetailsItemTransaction[]} transactions
+   * @returns {IInventoryDetailsItemTransaction}
+   */
+  public mapAccumTransactionsRunningValuation = (
+    transactions: IInventoryDetailsItemTransaction[],
+  ): IInventoryDetailsItemTransaction[] => {
+    const initial = this.getNumberMeta(0);
+
+    return transactions.reduce<
+      [
+        { runningValuation: IInventoryDetailsNumber },
+        IInventoryDetailsItemTransaction[],
+      ]
+    >(
+      ([a, mapped], b) => {
+        const adjustment = b.direction === 'OUT' ? -1 : 1;
+        const total = a.runningValuation.number + b.cost.number * adjustment;
+        const totalMeta = this.getNumberMeta(total, { excerptZero: false });
+        const accum = { ...b, runningValuation: totalMeta };
+
+        return [accum, [...mapped, accum]];
+      },
+      [{ runningValuation: initial }, []],
+    )[1];
+  };
+
+  /**
+   * Retrieve the inventory transaction total.
+   * @param {ModelObject<InventoryTransaction>} transaction
+   * @returns {number}
+   */
+  public getTransactionTotal = (
+    transaction: ModelObject<InventoryTransaction>,
+  ) => {
+    return transaction.quantity
+      ? transaction.quantity * transaction.rate
+      : transaction.rate;
+  };
+
+  /**
+   * Maps the item transaction to inventory item transaction node.
+   * @param {IInvetoryTransaction} transaction - The inventory transaction.
+   * @returns {IInventoryDetailsItemTransaction}
+   */
+  public itemTransactionMapper = (
+    transaction: ModelObject<InventoryTransaction>,
+  ): IInventoryDetailsItemTransaction => {
+    const total = this.getTransactionTotal(transaction);
+    const amountMovement = this.adjustAmountMovement(transaction.direction);
+
+    // Quantity movement.
+    const quantityMovement = amountMovement(transaction.quantity);
+    const cost = get(transaction, 'costLotAggregated.cost', 0);
+
+    // Profit margin.
+    const profitMargin = total - cost;
+
+    // Value from computed cost in `OUT` or from total sell price in `IN` transaction.
+    const value = transaction.direction === 'OUT' ? cost : total;
+
+    // Value movement depends on transaction direction.
+    const valueMovement = amountMovement(value);
+
+    return {
+      nodeType: INodeTypes.TRANSACTION,
+      date: this.getDateMeta(transaction.date),
+      transactionType: transaction.transcationTypeFormatted
+        ? this.i18n.t(transaction.transcationTypeFormatted)
+        : '',
+      transactionNumber: transaction?.meta?.transactionNumber,
+      direction: transaction.direction,
+
+      quantityMovement: this.getNumberMeta(quantityMovement),
+      valueMovement: this.getNumberMeta(valueMovement),
+
+      quantity: this.getNumberMeta(transaction.quantity),
+      total: this.getNumberMeta(total),
+
+      rate: this.getNumberMeta(transaction.rate),
+      cost: this.getNumberMeta(cost),
+      value: this.getNumberMeta(value),
+
+      profitMargin: this.getNumberMeta(profitMargin),
+
+      runningQuantity: this.getNumberMeta(0),
+      runningValuation: this.getNumberMeta(0),
+    };
+  };
+
+  /**
+   * Retrieve the inventory transcations by item id.
+   * @param {number} itemId - The item id.
+   * @returns {ModelObject<InventoryTransaction>[]}
+   */
+  public getInventoryTransactionsByItemId(
+    itemId: number,
+  ): ModelObject<InventoryTransaction>[] {
+    return defaultTo(
+      this.repository.inventoryTransactionsByItemId.get(itemId.toString()),
+      [],
+    );
+  }
+
+  /**
+   * Retrieve the item transaction node by the given item.
+   * @param {IItem} item
+   * @returns {IInventoryDetailsItemTransaction[]}
+   */
+  public getItemTransactions(
+    item: ModelObject<Item>,
+  ): IInventoryDetailsItemTransaction[] {
+    const transactions = this.getInventoryTransactionsByItemId(item.id);
+
+    return flow(
+      (transactionsList: ModelObject<InventoryTransaction>[]) =>
+        transactionsList.map(this.itemTransactionMapper),
+      this.mapAccumTransactionsRunningValuation,
+      this.mapAccumTransactionsRunningQuantity,
+    )(transactions);
+  }
+
+  /**
+   * Mappes the given item transactions.
+   * @param {IItem} item -
+   * @returns {(
+   *    IInventoryDetailsItemTransaction
+   *  | IInventoryDetailsOpening
+   *  | IInventoryDetailsClosing
+   *  )[]}
+   */
+  public itemTransactionsMapper(
+    item: ModelObject<Item>,
+  ): Array<
+    | IInventoryDetailsItemTransaction
+    | IInventoryDetailsOpening
+    | IInventoryDetailsClosing
+  > {
+    const transactions = this.getItemTransactions(item);
+    const openingValuation = this.getItemOpeingValuation(item);
+    const closingValuation = this.getItemClosingValuation(
+      item,
+      transactions,
+      openingValuation,
+    );
+    const hasTransactions = transactions.length > 0;
+    const isItemHasOpeningBalance = this.isItemHasOpeningBalance(item.id);
+
+    return flow(
+      (rows: TInventoryDetailsNodeChildren[]) => [...transactions, ...rows],
+      when(
+        constant(isItemHasOpeningBalance),
+        (rows: TInventoryDetailsNodeChildren[]) => [openingValuation, ...rows],
+      ),
+      when(
+        constant(hasTransactions),
+        (rows: TInventoryDetailsNodeChildren[]) => [...rows, closingValuation],
+      ),
+    )([]) as Array<
+      | IInventoryDetailsItemTransaction
+      | IInventoryDetailsOpening
+      | IInventoryDetailsClosing
+    >;
+  }
+
+  /**
+   * Detarmines the given item has opening balance transaction.
+   * @param {number} itemId - Item id.
+   * @return {boolean}
+   */
+  public isItemHasOpeningBalance(itemId: number): boolean {
+    return !!this.repository.openingBalanceTransactionsByItemId.get(itemId);
+  }
+
+  /**
+   * Retrieve the given item opening valuation.
+   * @param {IItem} item -
+   * @returns {IInventoryDetailsOpening}
+   */
+  public getItemOpeingValuation(
+    item: ModelObject<Item>,
+  ): IInventoryDetailsOpening {
+    const openingBalance =
+      this.repository.openingBalanceTransactionsByItemId.get(item.id);
+    const quantity = defaultTo(get(openingBalance, 'quantity'), 0);
+    const value = defaultTo(get(openingBalance, 'value'), 0);
+
+    return {
+      nodeType: INodeTypes.OPENING_ENTRY,
+      date: this.getDateMeta(this.query.fromDate),
+      quantity: this.getTotalNumberMeta(quantity),
+      value: this.getTotalNumberMeta(value),
+    };
+  }
+
+  /**
+   * Retrieve the given item closing valuation.
+   * @param {IItem} item -
+   * @returns {IInventoryDetailsOpening}
+   */
+  public getItemClosingValuation(
+    item: ModelObject<Item>,
+    transactions: IInventoryDetailsItemTransaction[],
+    openingValuation: IInventoryDetailsOpening,
+  ): IInventoryDetailsClosing {
+    const value = sumBy(transactions, 'valueMovement.number');
+    const quantity = sumBy(transactions, 'quantityMovement.number');
+    const profitMargin = sumBy(transactions, 'profitMargin.number');
+
+    const closingQuantity = quantity + openingValuation.quantity.number;
+    const closingValue = value + openingValuation.value.number;
+
+    return {
+      nodeType: INodeTypes.CLOSING_ENTRY,
+      date: this.getDateMeta(this.query.toDate),
+      quantity: this.getTotalNumberMeta(closingQuantity),
+      value: this.getTotalNumberMeta(closingValue),
+      profitMargin: this.getTotalNumberMeta(profitMargin),
+    };
+  }
+
+  /**
+   * Retrieve the item node of the report.
+   * @param {IItem} item
+   * @returns {IInventoryDetailsItem}
+   */
+  public itemsNodeMapper(item: ModelObject<Item>): IInventoryDetailsItem {
+    return {
+      id: item.id,
+      name: item.name,
+      code: item.code,
+      nodeType: INodeTypes.ITEM,
+      children: this.itemTransactionsMapper(item),
+    };
+  }
+
+  /**
+   * Detarmines the given node equals the given type.
+   * @param {string} nodeType
+   * @param {IItem} node
+   * @returns {boolean}
+   */
+  public isNodeTypeEquals(
+    nodeType: string,
+    node: IInventoryDetailsItem,
+  ): boolean {
+    return nodeType === node.nodeType;
+  }
+
+  /**
+   * Detarmines whether the given item node has transactions.
+   * @param {IInventoryDetailsItem} item
+   * @returns {boolean}
+   */
+  public isItemNodeHasTransactions(item: IInventoryDetailsItem) {
+    return !!this.repository.inventoryTransactionsByItemId.get(
+      item.id?.toString(),
+    );
+  }
+
+  /**
+   * Detarmines the filter
+   * @param {IInventoryDetailsItem} item
+   * @return {boolean}
+   */
+  public isFilterNode(item: IInventoryDetailsItem): boolean {
+    return ifElse(
+      (node: IInventoryDetailsItem) =>
+        this.isNodeTypeEquals(INodeTypes.ITEM, node),
+      (node: IInventoryDetailsItem) => this.isItemNodeHasTransactions(node),
+      constant(true),
+    )(item);
+  }
+
+  /**
+   * Filters items nodes.
+   * @param {IInventoryDetailsItem[]} items -
+   * @returns {IInventoryDetailsItem[]}
+   */
+  public filterItemsNodes(items: IInventoryDetailsItem[]) {
+    const filtered = filterDeep(
+      items,
+      this.isFilterNode.bind(this),
+      MAP_CONFIG,
+    );
+    return defaultTo(filtered, []);
+  }
+
+  /**
+   * Retrieve the items nodes of the report.
+   * @param {ModelObject<Item>[]} items
+   * @returns {IInventoryDetailsItem[]}
+   */
+  public itemsNodes(items: ModelObject<Item>[]): IInventoryDetailsItem[] {
+    return flow(
+      (nodes: ModelObject<Item>[]) =>
+        nodes.map(this.itemsNodeMapper.bind(this)),
+      (nodes: IInventoryDetailsItem[]) => this.filterItemsNodes(nodes),
+    )(items);
+  }
+
+  /**
+   * Retrieve the inventory item details report data.
+   * @returns {IInventoryDetailsData}
+   */
+  public reportData(): IInventoryDetailsData {
+    return this.itemsNodes(this.repository.items);
+  }
+}

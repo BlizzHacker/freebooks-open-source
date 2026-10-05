@@ -1,0 +1,19 @@
+@import '../../_base.scss';
+
+// Dialog
+.#{$ns}-dialog{
+  background: #fff;
+
+  &-header{
+    background: #ebf1f5;
+  }
+
+  &-body{
+    &.is-loading{
+      .bp4-spinner{
+        padding-top: 10px;
+        margin-bottom: -10px;
+      } 
+    }
+  }
+}

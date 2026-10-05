@@ -1,0 +1,54 @@
+.freebooks-evidence-linker {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px dashed var(--color-dashboard-card-border);
+  border-radius: 12px;
+  background: var(--color-app-body);
+}
+
+.freebooks-evidence-linker strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--color-bank-account-card-text);
+}
+
+.freebooks-evidence-linker p {
+  margin: 0 0 10px;
+  color: var(--color-dashboard-navbar-item-text);
+  line-height: 1.5;
+}
+
+.freebooks-evidence-linker__controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.freebooks-evidence-linker__controls .bp4-html-select {
+  min-width: 260px;
+  max-width: 100%;
+  flex: 1;
+}
+
+.freebooks-evidence-linker__controls select,
+.freebooks-evidence-linker__controls .bp4-button {
+  min-height: 42px;
+}
+
+.freebooks-evidence-linker__message {
+  margin-top: 9px !important;
+  color: var(--color-primary) !important;
+  font-weight: 600;
+}
+
+@media (max-width: 650px) {
+  .freebooks-evidence-linker__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .freebooks-evidence-linker__controls .bp4-html-select,
+  .freebooks-evidence-linker__controls .bp4-button {
+    width: 100%;
+  }
+}

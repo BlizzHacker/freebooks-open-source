@@ -1,0 +1,111 @@
+
+body.page-payment-receive-new,
+body.page-payment-receive-edit{
+
+  .dashboard__footer{
+    display: none;
+  }
+}
+
+.dashboard__insider--payment-receive-form{
+  padding-bottom: 64px;
+}
+
+
+.page-form--payment-receive {
+  $self: '.page-form';
+
+  #{$self}__header {
+    .bp4-label {
+      min-width: 160px;
+    }
+
+    .bp4-form-content {
+      width: 100%;
+    }
+
+    .bp4-form-group {
+      margin-bottom: 18px;
+
+      &.bp4-inline {
+        max-width: 470px;
+      }
+
+      button.receive-full-amount {
+        width: auto;
+        padding: 0;
+        min-height: auto;
+        font-size: 12px;
+        margin-top: 4px;
+        background-color: transparent;
+        color: #0052cc;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  #{$self}__primary-section {
+    display: flex;
+    padding-bottom: 2px;
+  }
+
+  #{$self}__big-numbers {
+    margin-left: auto;
+    padding-right: 10px;
+  }
+
+  .datatable-editor {
+
+    .table .tbody {
+      .tr.no-results {
+        .td {
+          font-size: 15px;
+          padding: 26px 0;
+          color: #5a5a77;
+        }
+      }
+    }
+
+    .table {
+      .th,
+      .td {
+        &.invoice_amount,
+        &.amount_due,
+        &.payment_amount {
+
+          &,
+          input {
+            text-align: right;
+          }
+        }
+      }
+
+      .tr {
+        .td:first-of-type,
+        .th:first-of-type {
+
+          span,
+          div {
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+      }
+    }
+  }
+
+  #{$self}__footer {
+    .form-group--statement {
+      max-width: 500px;
+      width: 100%;
+
+      textarea {
+        width: 100%;
+        min-height: 70px;
+      }
+    }
+  }
+}

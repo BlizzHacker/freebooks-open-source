@@ -1,0 +1,195 @@
+/* FreeBooks connection hub */
+.freebooks-connections {
+  --fb-surface: var(--color-dashboard-card-background);
+  --fb-border: var(--color-dashboard-card-border);
+  --fb-text: var(--color-dashboard-topbar-title-text);
+  --fb-muted: var(--color-datatable-head-text);
+  box-sizing: border-box;
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 28px clamp(14px, 3vw, 42px) 64px;
+  color: var(--fb-text);
+}
+.freebooks-connections *,
+.freebooks-home * { box-sizing: border-box; }
+.freebooks-eyebrow {
+  display: inline-block;
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.freebooks-connections__hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: clamp(22px, 3.4vw, 42px);
+  border: 1px solid rgba(76, 215, 180, .25);
+  border-radius: 22px;
+  background: linear-gradient(112deg, #0a3345 0%, #075567 68%, #098b79 100%);
+  box-shadow: 0 16px 44px rgba(6, 34, 47, .16);
+  color: #fff;
+}
+.freebooks-connections__hero .freebooks-eyebrow { color: #a8f4db; }
+.freebooks-connections__hero h2,
+.freebooks-home__hero h2 {
+  margin: 9px 0 10px;
+  font-size: clamp(27px, 3vw, 40px);
+  font-weight: 780;
+  letter-spacing: -.045em;
+  line-height: 1.12;
+}
+.freebooks-connections__hero p,
+.freebooks-home__hero p {
+  max-width: 690px;
+  margin: 0;
+  color: rgba(255, 255, 255, .83);
+  font-size: 15px;
+  line-height: 1.58;
+}
+.freebooks-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: fit-content;
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid var(--fb-border, var(--color-dashboard-card-border));
+  border-radius: 10px;
+  background: var(--fb-surface, var(--color-dashboard-card-background));
+  color: var(--fb-text, var(--color-dashboard-topbar-title-text));
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.25;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.freebooks-action:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 7px 18px rgba(4, 40, 45, .12);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+.freebooks-action--primary {
+  border-color: #50d7b8;
+  background: #68e8c7;
+  color: #073740;
+}
+.freebooks-action--primary:hover {
+  border-color: #aff7df;
+  background: #a4f1d7;
+  color: #073740;
+}
+.freebooks-action--quiet { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.36); color: #fff; }
+.freebooks-action--quiet:hover { color: #fff; background: rgba(255,255,255,.2); }
+.freebooks-connections__jump {
+  display: flex;
+  gap: 8px;
+  padding: 18px 0 3px;
+  overflow-x: auto;
+}
+.freebooks-connections__jump a {
+  flex-shrink: 0;
+  padding: 9px 13px;
+  border: 1px solid var(--fb-border);
+  border-radius: 999px;
+  color: var(--fb-text);
+  background: var(--fb-surface);
+  font-size: 12px;
+  font-weight: 720;
+  text-decoration: none;
+}
+.freebooks-connections__jump a:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.freebooks-connections__section { padding-top: 34px; scroll-margin-top: 90px; }
+.freebooks-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+.freebooks-section-heading h2 {
+  margin: 5px 0 5px;
+  color: var(--color-dashboard-topbar-title-text);
+  font-size: clamp(21px, 2vw, 27px);
+  font-weight: 760;
+  letter-spacing: -.035em;
+}
+.freebooks-section-heading p {
+  margin: 0;
+  color: var(--color-datatable-head-text);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.freebooks-section-heading > a { color: var(--color-primary); font-weight: 700; white-space: nowrap; }
+.freebooks-connections__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.freebooks-connection-tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 215px;
+  padding: 21px;
+  border: 1px solid var(--fb-border);
+  border-radius: 17px;
+  background: var(--fb-surface);
+  box-shadow: 0 5px 18px rgba(5, 34, 40, .045);
+}
+.freebooks-connection-tile__icon,
+.freebooks-home__area-icon {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border-radius: 11px;
+  background: rgba(55, 200, 162, .12);
+  color: var(--color-primary);
+  font-size: 22px;
+  line-height: 1;
+}
+.freebooks-connection-tile h3 {
+  margin: 15px 0 7px;
+  color: var(--fb-text);
+  font-size: 16px;
+  font-weight: 760;
+}
+.freebooks-connection-tile p {
+  flex: 1;
+  margin: 0 0 18px;
+  color: var(--fb-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.freebooks-connection-tile .freebooks-action { width: 100%; white-space: normal; text-align: center; }
+.freebooks-connections__processors > div { max-width: 100%; }
+.freebooks-connections__processors .bp4-card {
+  margin: 0 0 15px !important;
+  border: 1px solid var(--fb-border);
+  border-radius: 17px;
+  background: var(--fb-surface);
+}
+.freebooks-connections__processors .bp4-form-group { max-width: 700px; }
+@media (max-width: 1100px) {
+  .freebooks-connections__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .freebooks-connections { padding: 12px 12px 95px; }
+  .freebooks-connections__hero { display: block; border-radius: 16px; padding: 22px; }
+  .freebooks-connections__hero .freebooks-action { width: 100%; margin-top: 20px; }
+  .freebooks-connections__hero p { font-size: 13px; }
+  .freebooks-connections__grid { grid-template-columns: 1fr; gap: 11px; }
+  .freebooks-connection-tile { min-height: 0; }
+  .freebooks-section-heading { display: block; }
+  .freebooks-section-heading > a { display: inline-block; margin-top: 10px; }
+  .freebooks-connections__section { padding-top: 28px; }
+  .freebooks-connections__processors .bp4-card { overflow-wrap: anywhere; }
+  .freebooks-connections__processors .bp4-card .bp4-button { white-space: normal; }
+}

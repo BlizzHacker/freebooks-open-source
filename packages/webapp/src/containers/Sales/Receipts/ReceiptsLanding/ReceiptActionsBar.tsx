@@ -1,0 +1,258 @@
+import {
+  Button,
+  Classes,
+  NavbarDivider,
+  NavbarGroup,
+  Intent,
+  Alignment,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useBulkDeleteReceiptsDialog } from './hooks/use-bulk-delete-receipts-dialog';
+import { useReceiptsListContext } from './ReceiptsListProvider';
+import { withReceipts } from './withReceipts';
+import { withReceiptsActions } from './withReceiptsActions';
+import type { WithReceiptsProps } from './withReceipts';
+import type { WithReceiptsActionsProps } from './withReceiptsActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import {
+  Icon,
+  AdvancedFilterPopover,
+  DashboardFilterButton,
+  FormattedMessage as T,
+  DashboardRowsHeightButton,
+} from '@/components';
+import {
+  Can,
+  If,
+  DashboardActionsBar,
+  DashboardActionViewsList,
+} from '@/components';
+import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
+import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useSaveSettings } from '@/hooks/query';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useRefreshReceipts } from '@/hooks/query/receipts';
+
+interface ReceiptActionsBarProps
+  extends Pick<WithReceiptsProps, 'receiptSelectedRows'>,
+    WithReceiptsActionsProps,
+    WithDialogActionsProps,
+    WithDrawerActionsProps {
+  receiptsFilterConditions: any[];
+}
+
+/**
+ * Receipts actions bar.
+ */
+function ReceiptActionsBarInner({
+  // #withReceiptsActions
+  setReceiptsTableState,
+
+  // #withReceipts
+  receiptsFilterConditions,
+  receiptSelectedRows = [],
+
+  // #withDialogActions
+  openDialog,
+
+  // #withDrawerActions
+  openDrawer,
+}: ReceiptActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
+  const history = useHistory();
+
+  // Sale receipts list context.
+  const { receiptsViews, fields, receiptSettings } = useReceiptsListContext();
+  const receiptsTableSize = receiptSettings?.tableSize as string | undefined;
+
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
+
+  // Handle new receipt button click.
+  const onClickNewReceipt = () => {
+    history.push('/receipts/new');
+  };
+
+  // Sale receipt refresh action.
+  const { refresh } = useRefreshReceipts();
+
+  const handleTabChange = (view: { slug?: string } | null) => {
+    setReceiptsTableState({
+      viewSlug: view ? view.slug : null,
+    });
+  };
+
+  // Handle click a refresh sale estimates
+  const handleRefreshBtnClick = () => {
+    refresh();
+  };
+
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size: any) => {
+    saveSettings({
+      options: [{ group: 'salesReceipts', key: 'tableSize', value: size }],
+    });
+  };
+
+  // Handle the import button click.
+  const handleImportBtnClick = () => {
+    history.push('/receipts/import');
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'sale_receipt' });
+  };
+  // Handle print button click.
+  const handlePrintButtonClick = () => {
+    downloadExportPdf({ resource: 'SaleReceipt' });
+  };
+  // Handle customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleReceipt' });
+  };
+
+  const { openBulkDeleteDialog, isValidatingBulkDeleteReceipts } =
+    useBulkDeleteReceiptsDialog();
+
+  if (!isEmpty(receiptSelectedRows)) {
+    const handleBulkDelete = () => {
+      openBulkDeleteDialog(receiptSelectedRows as number[]);
+    };
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteReceipts}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
+  return (
+    <DashboardActionsBar>
+      <NavbarGroup>
+        <DashboardActionViewsList
+          resourceName={'receipts'}
+          allMenuItem={true}
+          allMenuItemText={<T id={'all'} />}
+          views={receiptsViews}
+          onChange={handleTabChange}
+        />
+
+        <NavbarDivider />
+        <Can I={SaleReceiptAction.Create} a={AbilitySubject.Receipt}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'plus'} />}
+            text={<T id={'new_receipt'} />}
+            onClick={onClickNewReceipt}
+          />
+        </Can>
+        <AdvancedFilterPopover
+          advancedFilterProps={{
+            conditions: receiptsFilterConditions,
+            defaultFieldKey: 'reference_no',
+            fields: fields,
+            onFilterChange: (filterConditions: any) => {
+              setReceiptsTableState({ filterRoles: filterConditions });
+            },
+          }}
+        >
+          <DashboardFilterButton
+            conditionsCount={receiptsFilterConditions.length}
+          />
+        </AdvancedFilterPopover>
+
+        <If condition={false}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+          />
+        </If>
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon={'print-16'} iconSize={16} />}
+          text={<T id={'print'} />}
+          onClick={handlePrintButtonClick}
+        />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon={'file-import-16'} />}
+          text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
+        />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon={'file-export-16'} iconSize={16} />}
+          text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
+        />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={receiptsTableSize}
+          onChange={handleTableRowSizeChange}
+        />
+        <NavbarDivider />
+      </NavbarGroup>
+      <NavbarGroup align={Alignment.RIGHT}>
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                onClick={handleCustomizeBtnClick}
+                text={'Customize Template'}
+              />
+            </Menu>
+          }
+        >
+          <Button icon={<Icon icon="cog-16" iconSize={16} />} minimal={true} />
+        </Popover>
+        <NavbarDivider />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="refresh-16" iconSize={14} />}
+          onClick={handleRefreshBtnClick}
+        />
+      </NavbarGroup>
+    </DashboardActionsBar>
+  );
+}
+
+export const ReceiptActionsBar = FF.pipe(
+  ReceiptActionsBarInner,
+  withDrawerActions,
+  withDialogActions,
+  withReceipts(({ receiptTableState, receiptSelectedRows }) => ({
+    receiptsFilterConditions: receiptTableState.filterRoles,
+    receiptSelectedRows,
+  })),
+  withReceiptsActions,
+);

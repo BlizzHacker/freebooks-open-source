@@ -1,0 +1,403 @@
+@import 'src/style/_base.scss';
+
+.bigcapital-datatable {
+  display: block;
+
+  .table {
+    text-align: left;
+    border-spacing: 0;
+    min-width: 100%;
+    display: block;
+    // color: #101219;
+
+    .thead .thead-inner,
+    .tbody .tbody-inner {
+      min-width: fit-content;
+    }
+
+    .thead {
+      overflow: hidden;
+
+      .th {
+        padding: 0.68rem 0.5rem;
+        background: var(--color-datatable-head-background);
+        font-size: 14px;
+        color: var(--color-datatable-head-text);
+        font-weight: 400;
+        border-bottom: 1px solid var(--color-datatable-head-border);
+
+        > div {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .sort-icon {
+        width: 0;
+        height: 0;
+        position: relative;
+        top: -2px;
+        display: inline-block;
+        margin-left: 5px;
+
+        &--desc {
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-bottom: 6px solid #666;
+        }
+
+        &--asc {
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-top: 6px solid #666;
+        }
+      }
+    }
+
+    .tr {
+      display: flex;
+      flex: 1 0 auto;
+
+      &:last-child {
+        .td {
+          border-bottom-width: 0;
+        }
+      }
+
+      .bp4-context-menu-popover-target {
+        z-index: 100;
+      }
+
+      .tr-context {
+        display: flex;
+        flex: 1 0 auto;
+      }
+
+      &:hover .td.clickable {
+        cursor: pointer;
+      }
+    }
+
+    .th,
+    .td {
+      box-sizing: border-box;
+      flex: 0 0 auto;
+      justify-content: flex-start;
+      align-items: flex-start;
+      display: flex;
+      margin: 0;
+      padding: 0.5rem;
+
+      .cell-inner {
+        flex: 1 0 0;
+      }
+
+      &:last-child {
+        border-right: 0;
+      }
+
+      .bp4-control {
+        margin-bottom: 0;
+      }
+      .resizer {
+        display: inline-block;
+        background: transparent;
+        width: 10px;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translateX(50%);
+        z-index: 1;
+        touch-action: none;
+
+        .inner-resizer {
+          height: 100%;
+          width: 1px;
+          background: transparent;
+          border-left: 1px solid transparent;
+          margin: 0 auto;
+        }
+      }
+
+      .bp4-control.bp4-checkbox:not(.bp4-large) .bp4-control-indicator {
+        cursor: auto;
+
+        &,
+        &::before {
+          height: 15px;
+          width: 15px;
+        }
+      }
+      .bp4-control.bp4-checkbox input:not(:checked):not(:indeterminate) ~ .bp4-control-indicator{
+        box-shadow: inset 0 0 0 1px var(--color-datatable-checkbox-border);
+      }
+
+      .skeleton {
+        animation:
+          skeleton-fade-in 0.3s linear forwards,
+          skeleton-glow 1s linear infinite alternate;
+
+        animation-delay: 0s, 0.3s;
+        height: 8px;
+        opacity: 1;
+        width: 65%;
+        margin: 10px 0;
+      }
+
+      &.align-right {
+        .skeleton {
+          margin-left: auto;
+        }
+      }
+
+      &.align-center {
+        .skeleton {
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+    }
+
+    .th {
+      .skeleton {
+        margin: 5px 0;
+      }
+    }
+
+    .tbody {
+      width: 100%;
+      overflow: auto;
+
+      .tbody-inner {
+        > .loading {
+          padding-top: 40px;
+        }
+      }
+
+      .tr .td {
+        border-bottom: 1px solid var(--color-datatable-cell-border);
+        align-items: center;
+
+        .placeholder {
+          color: #a0a0a0;
+        }
+
+        .text-overview {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .bp4-form-group {
+          width: 100%;
+        }
+
+        &.is-text-overview {
+          .expend-padding {
+            display: flex;
+            width: 100%;
+          }
+        }
+        &:focus {
+          outline: 1px solid var(--color-datatable-cell-focus-border);
+          outline-offset: -1px;
+        }
+      }
+
+      .tr:hover .td {
+        background: var(--color-datatable-cell-hover-background);
+      }
+
+      .tr.is-context-menu-active .td {
+        background: #f3fafc;
+      }
+      .tr.no-results {
+        .td {
+          flex-direction: column;
+          padding: 18px 20px;
+          color: var(--color-datatable-no-results-text);
+          align-items: center;
+          font-size: 14px;
+          border-bottom-width: 0;
+
+          &:hover {
+            background: transparent;
+          }
+        }
+      }
+
+      > .loading {
+        padding-top: 50px;
+      }
+    }
+
+    .tr .th,
+    .tr .td {
+      .expand-toggle {
+        cursor: auto;
+        display: inline-block;
+        padding: 4px 8px;
+        padding-left: 0;
+        margin: auto 0;
+        margin-left: 4px;
+        vertical-align: top;
+
+        .expand-arrow {
+          width: 0;
+          height: 0;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-left: 8px solid var(--color-datatable-caret);
+          display: block;
+          transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
+
+          &.is-expanded {
+            transform: rotate(90deg);
+          }
+        }
+
+        &:hover {
+          .expand-arrow {
+            border-left-color: var(--color-datatable-caret-hover);
+          }
+        }
+      }
+    }
+
+    .tr-inner {
+      display: flex;
+      width: 100%;
+    }
+
+    &-size {
+      &--medium {
+        .tbody .tr {
+          background-size: red;
+          min-height: 46px;
+        }
+      }
+
+      &--small {
+        .tbody .tr {
+          min-height: 40px;
+        }
+      }
+    }
+  }
+
+  .no-results {
+    color: #666;
+
+    .td {
+      padding-top: 20px;
+      padding-bottom: 20px;
+      width: 100%;
+    }
+  }
+
+  &.has-sticky-header {
+    .thead {
+      .tr .th {
+        position: sticky;
+      }
+    }
+  }
+
+  &.has-sticky {
+    .thead,
+    .tfoot {
+      position: sticky;
+      z-index: 1;
+    }
+
+    .thead {
+      top: 0;
+    }
+
+    .tfoot {
+      bottom: 0;
+    }
+
+    .tbody {
+      position: relative;
+      z-index: 0;
+    }
+
+    [data-sticky-td] {
+      position: sticky;
+    }
+
+    [data-sticky-last-left-td] {
+    }
+
+    [data-sticky-first-right-td] {
+    }
+  }
+
+  &.has-virtualized-rows {
+    .tbody {
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  }
+
+  .ReactVirtualized__Grid {
+    will-change: auto !important;
+  }
+}
+
+.table-constrant,
+.table--constrant {
+  .table {
+    .thead {
+      .tr:first-of-type .th {
+        border-top: 1px solid var(--color-datatable-constrant-head-border);
+      }
+    }
+    .thead .th {
+      background: transparent;
+      color: var(--color-datatable-constrant-head-text);
+      border-bottom: 1px solid var(--color-datatable-constrant-head-border);
+      padding: 0.5rem;
+    }
+
+    .tbody .tr .td {
+      background: transparent;
+      padding: 0.5rem 0.5rem;
+      border-bottom-width: 0;
+      color: var(--color-datatable-constrant-text);
+      border-color: var(--color-datatable-constrant-cell-border);
+    }
+  }
+}
+
+// Sticky header: blurred transparent background so body rows don't show through
+.bigcapital-datatable.has-sticky,
+.bigcapital-datatable.has-sticky-header {
+  &.table-constrant .table .thead .th,
+  &.table--constrant .table .thead .th {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    body.bp4-dark & {
+      background: rgba(28, 33, 39, 0.6);
+    }
+  }
+}
+
+// Sticky cells in table body: blurred transparent background so content doesn't show through
+.bigcapital-datatable.has-sticky {
+  &.table-constrant .table .tbody .tr:not(:hover) .td[data-sticky-td],
+  &.table--constrant .table .tbody .tr:not(:hover) .td[data-sticky-td] {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    body.bp4-dark & {
+      background: rgba(28, 33, 39, 0.6);
+    }
+  }
+}

@@ -1,0 +1,25 @@
+FROM node:24-bookworm-slim AS build
+WORKDIR /source
+ENV HUSKY=0
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/* && npm install -g pnpm@9.1.2
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml lerna.json ./
+COPY packages/server/package.json ./packages/server/package.json
+COPY packages/webapp/package.json ./packages/webapp/package.json
+COPY shared/bigcapital-utils/package.json ./shared/bigcapital-utils/package.json
+COPY shared/sdk-ts/package.json ./shared/sdk-ts/package.json
+COPY shared/email-components/package.json ./shared/email-components/package.json
+COPY shared/pdf-templates/package.json ./shared/pdf-templates/package.json
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm --filter @bigcapital/utils build && pnpm --filter @bigcapital/sdk-ts build && pnpm --filter @bigcapital/email-components build && pnpm --filter @bigcapital/pdf-templates build && pnpm --filter @bigcapital/server build
+RUN pnpm --filter @bigcapital/server deploy --prod /runtime
+RUN cp -r shared/bigcapital-utils/dist /runtime/node_modules/@bigcapital/utils/dist && cp -r shared/sdk-ts/dist /runtime/node_modules/@bigcapital/sdk-ts/dist && cp -r shared/email-components/dist /runtime/node_modules/@bigcapital/email-components/dist && cp -r shared/pdf-templates/dist /runtime/node_modules/@bigcapital/pdf-templates/dist
+RUN cp -r packages/server/dist /runtime/dist && cp -r packages/server/public /runtime/public && cp -r packages/server/static /runtime/static
+FROM node:24-bookworm-slim
+WORKDIR /app
+ENV NODE_ENV=production NEW_RELIC_NO_CONFIG_FILE=true PORT=3000
+COPY --from=build --chown=node:node /runtime /app
+COPY LICENSE /app/LICENSE
+USER node
+EXPOSE 3000
+CMD ["node", "dist/main.js"]

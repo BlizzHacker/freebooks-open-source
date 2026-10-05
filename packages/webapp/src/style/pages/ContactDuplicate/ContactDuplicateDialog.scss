@@ -1,0 +1,24 @@
+.dialog--contact-duplicate {
+  .bp4-dialog-body {
+    > .paragraph {
+      margin-bottom: 1rem;
+    }
+    .bp4-form-group {
+      margin-bottom: 1.4rem;
+
+      .bp4-label {
+        font-size: 13px;
+      }
+    }
+    .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
+      width: 260px;
+    }
+  }
+
+  .bp4-dialog-footer {
+    .bp4-dialog-footer-actions .bp4-button {
+      margin-left: 8px;
+      min-width: 65px;
+    }
+  }
+}

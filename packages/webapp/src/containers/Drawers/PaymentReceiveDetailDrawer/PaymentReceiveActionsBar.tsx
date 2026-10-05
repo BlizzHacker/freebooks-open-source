@@ -1,0 +1,146 @@
+import {
+  Button,
+  NavbarGroup,
+  Classes,
+  NavbarDivider,
+  Intent,
+} from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
+import { PaymentReceiveMoreMenuItems } from './utils';
+import {
+  Can,
+  Icon,
+  FormattedMessage as T,
+  DrawerActionsBar,
+} from '@/components';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '@/constants/abilityOption';
+import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+
+interface PaymentReceiveActionsBarInnerProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
+
+/**
+ * Payment receive actions bar.
+ */
+function PaymentsReceivedActionsBar({
+  // #withAlertActions
+  openAlert,
+
+  // #withDrawerActions
+  closeDrawer,
+  openDrawer,
+
+  // #withDialogActions
+  openDialog,
+}: PaymentReceiveActionsBarInnerProps) {
+  const history = useHistory();
+
+  // Retrieve the payment receive drawer context.
+  const { paymentReceiveId } = usePaymentReceiveDetailContext();
+
+  // Handle edit payment receive.
+  const handleEditPaymentReceive = () => {
+    history.push(`/payments-received/${paymentReceiveId}/edit`);
+    closeDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS);
+  };
+
+  // Handle delete payment receive.
+  const handleDeletePaymentReceive = () => {
+    openAlert('payment-received-delete', { paymentReceiveId });
+  };
+
+  // Handle notify via SMS.
+  const handleNotifyViaSMS = () => {
+    openDialog('notify-payment-via-sms', { paymentReceiveId });
+  };
+
+  // Handle print payment receive.
+  const handlePrintPaymentReceive = () => {
+    openDialog('payment-pdf-preview', { paymentReceiveId });
+  };
+
+  // Handle mail action.
+  const handleMailPaymentReceive = () => {
+    openDrawer(DRAWERS.PAYMENT_RECEIVED_SEND_MAIL, {
+      paymentReceivedId: paymentReceiveId,
+    });
+  };
+
+  return (
+    <DrawerActionsBar>
+      <NavbarGroup>
+        <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit_payment_received'} />}
+            onClick={handleEditPaymentReceive}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={PaymentReceiveAction.View} a={AbilitySubject.PaymentReceive}>
+          <Button
+            className={Classes.MINIMAL}
+            text={'Send Mail'}
+            icon={<Icon icon="envelope" />}
+            onClick={handleMailPaymentReceive}
+          />
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="print-16" />}
+            text={<T id={'print'} />}
+            onClick={handlePrintPaymentReceive}
+          />
+          <NavbarDivider />
+        </Can>
+        <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'trash-16'} iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleDeletePaymentReceive}
+          />
+        </Can>
+        <Can
+          I={PaymentReceiveAction.NotifyBySms}
+          a={AbilitySubject.PaymentReceive}
+        >
+          <NavbarDivider />
+          <PaymentReceiveMoreMenuItems
+            payload={{
+              onNotifyViaSMS: handleNotifyViaSMS,
+            }}
+          />
+        </Can>
+      </NavbarGroup>
+    </DrawerActionsBar>
+  );
+}
+
+export const PaymentReceiveActionsBar = FF.pipe(
+  PaymentsReceivedActionsBar,
+  withAlertActions,
+  withDrawerActions,
+  withDialogActions,
+);

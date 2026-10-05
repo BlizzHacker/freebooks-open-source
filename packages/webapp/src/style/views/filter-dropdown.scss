@@ -1,0 +1,115 @@
+
+.filter-dropdown{
+  width: 600px;
+
+  &__form{
+    
+  }
+
+
+  &__conditions-wrap{
+    
+  }
+
+  &__conditions{
+    padding: 6px 0
+  }
+
+  &__condition{
+    display: flex;
+    padding: 6px 12px;
+
+    .bp4-input{
+      padding: 0 6px;
+    }
+    .form-group--select-list .bp4-popover-target .bp4-button{
+      padding-left: 6px;
+    } 
+
+    .bp4-html-select::after,
+    .form-group--select-list .bp4-button::after{
+      margin-right: 6px;
+      // border-top-color: #c5c5c5;
+    }
+    .bp4-html-select,
+    .bp4-input,
+    .form-group--select-list .bp4-button{
+      
+      &:not(:focus){
+        // border-color: #d3d9de;
+      }
+    }
+
+    .form-group--select-list .bp4-button{
+      padding-right: 20px;
+    }
+    .bp4-form-group{
+      margin-bottom: 0;
+      padding-right: 10px;
+
+      .bp4-control.bp4-checkbox{
+        margin-left: 20px;
+      }
+
+      .bp4-popover-wrapper{
+        width: 100%;
+      }
+
+      .bp4-button{
+        text-overflow: ellipsis;
+        overflow: visible;
+        white-space: nowrap;
+        display: block;
+        overflow: hidden;
+      }
+    }
+    .form-group--condition{
+      width: 65px;
+
+      input[disabled] {
+        background: transparent;
+        border: 0;
+      }
+    }
+    .form-group--comparator{
+      width: 120px;
+    }
+    .form-group--fieldKey{
+      width: 145px; 
+    }
+    .form-group--value{
+      width: 220px;
+    }
+
+    .button--remove{
+      margin-left: -6px;
+
+      .bp4-icon{
+        color: #929aa0;
+      }
+    }
+  }
+
+  &__footer{
+    padding: 10px 12px;
+    margin-top: -6px;
+  }
+}
+
+.bp4-popover{
+
+  &,
+  & .bp4-popover-content{
+    border-radius: 5px;
+  }
+}
+
+.bp4-menu-item{
+  .text-hint{
+    font-size: 11px;
+    line-height: 1.3;
+    display: block;
+    color: #5c7080;
+  }
+
+}

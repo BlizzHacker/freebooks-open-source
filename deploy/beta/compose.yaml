@@ -1,0 +1,88 @@
+name: ${COMPOSE_PROJECT_NAME:-freebooks-beta}
+x-logging: &logging
+  driver: json-file
+  options: {max-size: "10m", max-file: "3"}
+services:
+  web:
+    image: freebooks/web:beta-local
+    build: {context: ../.., dockerfile: deploy/beta/Dockerfile.web}
+    ports: ["${BIND_ADDRESS:-127.0.0.1}:${HTTP_PORT:-8740}:80"]
+    depends_on: {api: {condition: service_healthy}}
+    restart: unless-stopped
+    logging: *logging
+  api:
+    image: freebooks/api:beta-local
+    build: {context: ../.., dockerfile: deploy/beta/Dockerfile.api}
+    env_file: .env
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      QUEUE_HOST: redis
+      QUEUE_PORT: "6379"
+      PORT: "3000"
+      SYSTEM_DB_MIGRATION_DIR: /app/dist/database/system/migrations
+      SYSTEM_DB_SEEDS_DIR: /app/dist/database/system/seeds
+      S3_ENDPOINT: http://garage:3900
+      GOTENBERG_URL: http://gotenberg:3000
+      GOTENBERG_DOCS_URL: http://api:3000/public/
+      CLICKHOUSE_ENABLED: "false"
+      AUTH_SSO_ENABLED: "false"
+    depends_on: {db: {condition: service_healthy}, redis: {condition: service_healthy}, garage: {condition: service_started}}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp:rw,nosuid,size=128m"]
+    volumes: [imports:/app/static/imports]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    pids_limit: 256
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3000/api/system_db',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    logging: *logging
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${SYSTEM_DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes: [db:/var/lib/mysql, "./init-db.sh:/docker-entrypoint-initdb.d/freebooks-init.sh:ro"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+    logging: *logging
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: [redis:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 12
+    restart: unless-stopped
+    logging: *logging
+  garage:
+    image: dxflrs/garage:v1.3.1
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN}
+    volumes: ["./garage.toml:/etc/garage.toml:ro", "garage:/var/lib/garage"]
+    restart: unless-stopped
+    logging: *logging
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    command: ["gotenberg", "--chromium-allow-list=^http://api:3000/.*"]
+    restart: unless-stopped
+    logging: *logging
+volumes:
+  db:
+  redis:
+  garage:
+  imports:

@@ -1,0 +1,76 @@
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { BullModule } from '@nestjs/bullmq';
+import { Module } from '@nestjs/common';
+import { SocketModule } from '../Socket/Socket.module';
+import { PlaidUpdateTransactionsOnItemCreatedSubscriber } from './subscribers/PlaidUpdateTransactionsOnItemCreatedSubscriber';
+import { PlaidUpdateTransactions } from './command/PlaidUpdateTransactions';
+import { PlaidSyncDb } from './command/PlaidSyncDB';
+import { PlaidWebooks } from './command/PlaidWebhooks';
+import { PlaidLinkTokenService } from './queries/GetPlaidLinkToken.service';
+import { PlaidApplication } from './PlaidApplication';
+import { PlaidDataExportService } from './PlaidDataExport.service';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { PlaidItem } from './models/PlaidItem';
+import { PlaidModule } from '../Plaid/Plaid.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
+import { AttachmentsModule } from '../Attachments/Attachment.module';
+import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
+import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
+import { PlaidItemService } from './command/PlaidItem';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
+import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
+import { SystemPlaidItem } from './models/SystemPlaidItem';
+import { BankingPlaidController } from './BankingPlaid.controller';
+import { BankingPlaidWebhooksController } from './BankingPlaidWebhooks.controller';
+import { SetupPlaidItemTenantService } from './command/SetupPlaidItemTenant.service';
+import { UpdateBankingPlaidTransitionsQueueJob } from './types/BankingPlaid.types';
+import { PlaidFetchTransactionsProcessor } from './jobs/PlaidFetchTransactionsJob';
+import { PlaidWebhookVerificationService } from './PlaidWebhookVerification.service';
+import { BankingTransactionsRegonizeModule } from '../BankingTranasctionsRegonize/BankingTransactionsRegonize.module';
+import { RecognizeSyncedBankTranasctionsSubscriber } from './subscribers/RecognizeSyncedBankTransactions.subscriber';
+
+const models = [RegisterTenancyModel(PlaidItem)];
+
+@Module({
+  imports: [
+    TenancyModule,
+    SocketModule,
+    PlaidModule,
+    AccountsModule,
+    AttachmentsModule,
+    BankingCategorizeModule,
+    BankingTransactionsModule,
+    BankingTransactionsRegonizeModule,
+    BullModule.registerQueue({
+      name: UpdateBankingPlaidTransitionsQueueJob,
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: true,
+      },
+    }),
+    BullBoardModule.forFeature({
+      name: UpdateBankingPlaidTransitionsQueueJob,
+      adapter: BullMQAdapter,
+    }),
+    ...models,
+  ],
+  providers: [
+    InjectSystemModel(SystemPlaidItem),
+    PlaidItemService,
+    PlaidUpdateTransactions,
+    PlaidSyncDb,
+    PlaidWebooks,
+    PlaidLinkTokenService,
+    PlaidApplication,
+    PlaidDataExportService,
+    SetupPlaidItemTenantService,
+    PlaidWebhookVerificationService,
+    PlaidFetchTransactionsProcessor,
+    PlaidUpdateTransactionsOnItemCreatedSubscriber,
+    RecognizeSyncedBankTranasctionsSubscriber,
+  ],
+  exports: [...models],
+  controllers: [BankingPlaidController, BankingPlaidWebhooksController],
+})
+export class BankingPlaidModule {}

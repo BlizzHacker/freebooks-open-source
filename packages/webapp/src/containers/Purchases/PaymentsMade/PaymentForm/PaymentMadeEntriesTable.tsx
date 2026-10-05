@@ -1,0 +1,97 @@
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import React, { useCallback } from 'react';
+import { usePaymentMadeEntriesTableColumns } from './components';
+import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
+import type { PaymentMadeEntry, PaymentMadeFormValues } from './utils';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import {
+  DataTableEditable,
+  CloudLoadingIndicator,
+  FormattedMessage as T,
+} from '@/components';
+import { CLASSES } from '@/constants/classes';
+import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { updateTableCell } from '@/utils';
+
+type PaymentMadeEntriesTableProps = WithDrawerActionsProps & {
+  onUpdateData: (entries: PaymentMadeEntry[]) => void;
+  entries: PaymentMadeEntry[];
+  currencyCode: string;
+};
+
+/**
+ * Payment made items table.
+ */
+function PaymentMadeEntriesTableInner({
+  onUpdateData,
+  entries,
+  currencyCode,
+
+  // #withDrawerActions
+  openDrawer,
+}: PaymentMadeEntriesTableProps) {
+  // Payment made inner context.
+  const { isNewEntriesFetching } = usePaymentMadeInnerContext();
+
+  // Opens the bill detail drawer of the given bill.
+  const handleViewBillDetail = (billId: number) => {
+    openDrawer(DRAWERS.BILL_DETAILS, { billId });
+  };
+
+  // Payment entries table columns.
+  const columns = usePaymentMadeEntriesTableColumns(handleViewBillDetail);
+
+  // Formik context.
+  const {
+    values: { vendorId },
+    errors,
+  } = useFormikContext<PaymentMadeFormValues>();
+
+  // Handle update data.
+  const handleUpdateData = useCallback(
+    (rowIndex: number, columnId: string, value: unknown) => {
+      const newRows = FF.pipe(
+        entries,
+        updateTableCell(rowIndex, columnId, value),
+      );
+      onUpdateData(newRows);
+    },
+    [onUpdateData, entries],
+  );
+  // Detarmines the right no results message before selecting vendor and after
+  // selecting vendor id.
+  const noResultsMessage = vendorId ? (
+    <T
+      id={
+        'there_is_no_payable_bills_for_this_vendor_that_can_be_applied_for_this_payment'
+      }
+    />
+  ) : (
+    <T id={'please_select_a_vendor_to_display_all_open_bills_for_it'} />
+  );
+
+  return (
+    <CloudLoadingIndicator isLoading={isNewEntriesFetching}>
+      <DataTableEditable
+        progressBarLoading={isNewEntriesFetching}
+        className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
+        columns={columns}
+        data={entries}
+        payload={{
+          errors: (errors?.entries || []) as unknown[],
+          updateData: handleUpdateData,
+          currencyCode,
+        }}
+        noResults={noResultsMessage}
+      />
+    </CloudLoadingIndicator>
+  );
+}
+
+export const PaymentMadeEntriesTable = FF.pipe(
+  PaymentMadeEntriesTableInner,
+  withDrawerActions,
+);

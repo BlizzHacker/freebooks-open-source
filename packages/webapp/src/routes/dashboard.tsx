@@ -1,0 +1,1385 @@
+// @ts-nocheck
+import { lazy } from 'react';
+import intl from 'react-intl-universal';
+import { Features } from '@/constants/features';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+
+const SUBSCRIPTION_TYPE = {
+  MAIN: 'main',
+};
+export const getDashboardRoutes = () => [
+  // Accounts.
+  {
+    path: '/accounts/import',
+    component: lazy(() =>
+      import('@/containers/Accounts/AccountsImport').then((m) => ({
+        default: m.AccountsImport,
+      })),
+    ),
+    breadcrumb: 'Accounts Import',
+    pageTitle: 'Accounts Import',
+  },
+  {
+    path: `/accounts`,
+    component: lazy(() =>
+      import('@/containers/Accounts/AccountsChart').then((m) => ({
+        default: m.AccountsChart,
+      })),
+    ),
+    breadcrumb: intl.get('accounts_chart'),
+    hotkey: 'shift+a',
+    pageTitle: intl.get('accounts_chart'),
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Accounting.
+  {
+    path: `/make-journal-entry`,
+    component: lazy(() =>
+      import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage').then(
+        (m) => ({ default: m.MakeJournalEntriesPage }),
+      ),
+    ),
+    breadcrumb: intl.get('make_journal_entry'),
+    hotkey: 'ctrl+shift+m',
+    pageTitle: intl.get('new_journal'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/manual-journals/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage').then(
+        (m) => ({ default: m.MakeJournalEntriesPage }),
+      ),
+    ),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_journal'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/manual-journals/import`,
+    component: lazy(() =>
+      import('@/containers/Accounting/ManualJournalsImport').then((m) => ({
+        default: m.ManualJournalsImport,
+      })),
+    ),
+    breadcrumb: intl.get('edit'),
+    pageTitle: 'Manual Journals Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/manual-journals`,
+    component: lazy(() =>
+      import('@/containers/Accounting/JournalsLanding/ManualJournalsList').then(
+        (m) => ({ default: m.ManualJournalsList }),
+      ),
+    ),
+    breadcrumb: intl.get('manual_journals'),
+    hotkey: 'shift+m',
+    pageTitle: intl.get('manual_journals'),
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/item/categories/import`,
+    component: lazy(() =>
+      import('@/containers/ItemsCategories/ItemCategoriesImport').then((m) => ({
+        default: m.ItemCategoriesImport,
+      })),
+    ),
+    backLink: true,
+    pageTitle: 'Item Categories Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+  },
+  {
+    path: `/items/categories`,
+    component: lazy(() =>
+      import('@/containers/ItemsCategories/ItemCategoriesList').then((m) => ({
+        default: m.ItemCategoriesList,
+      })),
+    ),
+    breadcrumb: intl.get('categories'),
+    pageTitle: intl.get('categories_list'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Items.
+  {
+    path: `/items/import`,
+    component: lazy(() =>
+      import('@/containers/Items/ItemsImportPage').then((m) => ({
+        default: m.ItemsImportpage,
+      })),
+    ),
+    backLink: true,
+    pageTitle: 'Items Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+  },
+
+  {
+    path: `/items/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Items/ItemFormPage').then((m) => ({
+        default: m.ItemFormPage,
+      })),
+    ),
+    name: 'item-edit',
+    breadcrumb: intl.get('edit_item'),
+    pageTitle: intl.get('edit_item'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/items/new?duplicate=/:id`,
+    component: lazy({
+      loader: () => import('@/containers/Items/ItemFormPage'),
+    }),
+    breadcrumb: intl.get('duplicate_item'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/items/new`,
+    component: lazy(() =>
+      import('@/containers/Items/ItemFormPage').then((m) => ({
+        default: m.ItemFormPage,
+      })),
+    ),
+    name: 'item-new',
+    breadcrumb: intl.get('new_item'),
+    hotkey: 'ctrl+shift+w',
+    pageTitle: intl.get('new_item'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/items`,
+    component: lazy(() =>
+      import('@/containers/Items/ItemsList').then((m) => ({
+        default: m.ItemsList,
+      })),
+    ),
+    breadcrumb: intl.get('items'),
+    hotkey: 'shift+w',
+    pageTitle: intl.get('items_list'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Inventory adjustments.
+  {
+    path: `/inventory-adjustments`,
+    component: lazy(() =>
+      import('@/containers/InventoryAdjustments/InventoryAdjustmentList').then(
+        (m) => ({ default: m.InventoryAdjustmentList }),
+      ),
+    ),
+    breadcrumb: intl.get('inventory_adjustments'),
+    pageTitle: intl.get('inventory_adjustment_list'),
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Warehouse Transfer.
+  {
+    path: `/warehouses-transfers/:id/edit`,
+    component: lazy(() =>
+      import(
+        '@/containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
+      ).then((m) => ({ default: m.WarehouseTransferFormPage })),
+    ),
+    name: 'warehouse-transfer-edit',
+    pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
+    sidebarExpand: false,
+    backLink: true,
+  },
+  {
+    path: `/warehouses-transfers/new`,
+    component: lazy(() =>
+      import(
+        '@/containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
+      ).then((m) => ({ default: m.WarehouseTransferFormPage })),
+    ),
+    name: 'warehouses-transfer-new',
+    pageTitle: intl.get('warehouse_transfer.label.new_warehouse_transfer'),
+    sidebarExpand: false,
+    backLink: true,
+  },
+  {
+    path: `/warehouses-transfers`,
+    component: lazy(() =>
+      import(
+        '@/containers/WarehouseTransfers/WarehouseTransfersLanding/WarehouseTransfersList'
+      ).then((m) => ({ default: m.WarehouseTransfersList })),
+    ),
+    pageTitle: intl.get('warehouse_transfer.label.warehouse_transfer_list'),
+    // defaultSearchResource: RESOURCES_TYPES.ITEM,
+    // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Financial Reports.
+  {
+    path: `/financial-reports/general-ledger`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/GeneralLedger/GeneralLedger'
+      ).then((m) => ({ default: m.GeneralLedger })),
+    ),
+    breadcrumb: intl.get('general_ledger'),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_your'),
+    hotkey: 'shift+4',
+    pageTitle: intl.get('general_ledger'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/balance-sheet`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/BalanceSheet/BalanceSheet').then(
+        (m) => ({ default: m.BalanceSheet }),
+      ),
+    ),
+    breadcrumb: intl.get('balance_sheet'),
+    hint: intl.get('reports_a_company_s_assets_liabilities_and_shareholders'),
+    hotkey: 'shift+1',
+    pageTitle: intl.get('balance_sheet'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/trial-balance-sheet`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
+      ).then((m) => ({ default: m.TrialBalanceSheet })),
+    ),
+    breadcrumb: intl.get('trial_balance_sheet'),
+    hint: intl.get('summarizes_the_credit_and_debit_balance_of_each_account'),
+    hotkey: 'shift+5',
+    pageTitle: intl.get('trial_balance_sheet'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/profit-loss-sheet`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'
+      ).then((mod) => ({ default: mod.ProfitLossSheet })),
+    ),
+    breadcrumb: intl.get('profit_loss_sheet'),
+    hint: intl.get('reports_the_revenues_costs_and_expenses'),
+    hotkey: 'shift+2',
+    pageTitle: intl.get('profit_loss_sheet'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/financial-reports/receivable-aging-summary',
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/ARAgingSummary/ARAgingSummary'
+      ).then((m) => ({ default: m.ARAgingSummary })),
+    ),
+    breadcrumb: intl.get('receivable_aging_summary'),
+    hint: intl.get('summarize_total_unpaid_balances_of_customers_invoices'),
+    pageTitle: intl.get('receivable_aging_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/financial-reports/payable-aging-summary',
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/APAgingSummary/APAgingSummary'
+      ).then((m) => ({ default: m.APAgingSummary })),
+    ),
+    breadcrumb: intl.get('payable_aging_summary'),
+    hint: intl.get('summarize_total_unpaid_balances_of_vendors_purchase'),
+    pageTitle: intl.get('payable_aging_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/journal-sheet`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/Journal/Journal').then((m) => ({
+        default: m.Journal,
+      })),
+    ),
+    breadcrumb: intl.get('journal_sheet'),
+    hint: intl.get('the_debit_and_credit_entries_of_system_transactions'),
+    hotkey: 'shift+3',
+    pageTitle: intl.get('journal_sheet'),
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/purchases-by-items`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/PurchasesByItems/PurchasesByItems'
+      ).then((m) => ({ default: m.PurchasesByItems })),
+    ),
+    breadcrumb: intl.get('purchases_by_items'),
+    // hotkey: '',
+    pageTitle: intl.get('purchases_by_items'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/sales-by-items`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/SalesByItems/SalesByItems').then(
+        (m) => ({ default: m.SalesByItems }),
+      ),
+    ),
+    breadcrumb: intl.get('sales_by_items'),
+    pageTitle: intl.get('sales_by_items'),
+    hint: intl.get(
+      'summarize_the_business_s_sold_items_quantity_income_and_average_income_rate',
+    ),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/inventory-valuation`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/InventoryValuation/InventoryValuation'
+      ).then((m) => ({ default: m.InventoryValuation })),
+    ),
+    breadcrumb: intl.get('inventory_valuation'),
+    hint: intl.get('summerize_your_transactions_for_each_inventory_item'),
+    pageTitle: intl.get('inventory_valuation'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/customers-balance-summary`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/CustomersBalanceSummary/CustomersBalanceSummary'
+      ).then((m) => ({ default: m.CustomersBalanceSummary })),
+    ),
+    breadcrumb: intl.get('customers_balance_summary'),
+    hint: intl.get('summerize_how_much_each_customer_owes_your_business'),
+    pageTitle: intl.get('customers_balance_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/vendors-balance-summary`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/VendorsBalanceSummary/VendorsBalanceSummary'
+      ).then((m) => ({ default: m.VendorsBalanceSummary })),
+    ),
+    breadcrumb: intl.get('vendors_balance_summary'),
+    hint: intl.get('summerize_the_total_amount_your_business_owes_each_vendor'),
+    pageTitle: intl.get('vendors_balance_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/transactions-by-customers`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/CustomersTransactions/CustomersTransactions'
+      ).then((m) => ({ default: m.CustomersTransactions })),
+    ),
+    breadcrumb: intl.get('customers_transactions'),
+    hint: intl.get(
+      'reports_every_transaction_going_in_and_out_of_each_customer',
+    ),
+    pageTitle: intl.get('customers_transactions'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/transactions-by-vendors`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/VendorsTransactions/VendorsTransactions'
+      ).then((m) => ({ default: m.VendorsTransactions })),
+    ),
+    breadcrumb: intl.get('vendors_transactions'),
+    hint: intl.get(
+      'reports_every_transaction_going_in_and_out_of_each_vendor_supplier',
+    ),
+    pageTitle: intl.get('vendors_transactions'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/cash-flow`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/CashFlowStatement/CashFlowStatement'
+      ).then((m) => ({ default: m.CashFlowStatement })),
+    ),
+    breadcrumb: intl.get('cash_flow_statement'),
+    hint: intl.get('reports_inflow_and_outflow_of_cash_and_cash_equivalents'),
+    pageTitle: intl.get('cash_flow_statement'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/inventory-item-details`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/InventoryItemDetails/InventoryItemDetails'
+      ).then((m) => ({ default: m.InventoryItemDetails })),
+    ),
+    breadcrumb: intl.get('inventory_item_details'),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_your_items'),
+    pageTitle: intl.get('inventory_item_details'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/realized-gain-loss`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/RealizedGainOrLoss/RealizedGainOrLoss'
+      ).then((m) => ({ default: m.RealizedGainOrLoss })),
+    ),
+    breadcrumb: intl.get('realized_gain_or_loss.label'),
+    pageTitle: intl.get('realized_gain_or_loss.label'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/unrealized-gain-loss`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/UnrealizedGainOrLoss/UnrealizedGainOrLoss'
+      ).then((m) => ({ default: m.UnrealizedGainOrLoss })),
+    ),
+    breadcrumb: intl.get('unrealized_gain_or_loss.label'),
+    pageTitle: intl.get('unrealized_gain_or_loss.label'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/financial-reports/sales-tax-liability-summary',
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/SalesTaxLiabilitySummary/SalesTaxLiabilitySummary'
+      ).then((m) => ({ default: m.SalesTaxLiabilitySummary })),
+    ),
+    breadcrumb: 'Sales Tax Liability Summary',
+    pageTitle: 'Sales Tax Liability Summary',
+    backLink: true,
+    sidebarExpand: false,
+    feature: Features.SalesTax,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/audit-log`,
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/AuditLog/AuditLogReport').then(
+        (m) => ({ default: m.AuditLogReport }),
+      ),
+    ),
+    breadcrumb: intl.get('audit_log_report'),
+    pageTitle: intl.get('audit_log_report'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/financial-reports',
+    component: lazy(() =>
+      import('@/containers/FinancialStatements/FinancialReports').then((m) => ({
+        default: m.FinancialReports,
+      })),
+    ),
+    breadcrumb: intl.get('financial_reports'),
+    pageTitle: intl.get('all_financial_reports'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Expenses.
+  {
+    path: `/expenses/import`,
+    component: lazy(() =>
+      import('@/containers/Expenses/ExpensesImport').then((m) => ({
+        default: m.ExpensesImport,
+      })),
+    ),
+    breadcrumb: 'Expenses Import',
+    hotkey: 'ctrl+shift+x',
+    pageTitle: 'Expenses Import',
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/expenses/new`,
+    component: lazy(() =>
+      import('@/containers/Expenses/ExpenseForm/ExpenseFormPage').then((m) => ({
+        default: m.ExpenseFormPage,
+      })),
+    ),
+    breadcrumb: intl.get('expenses'),
+    hotkey: 'ctrl+shift+x',
+    pageTitle: intl.get('new_expense'),
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/expenses/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Expenses/ExpenseForm/ExpenseFormPage').then((m) => ({
+        default: m.ExpenseFormPage,
+      })),
+    ),
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_expense'),
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/expenses`,
+    component: lazy(() =>
+      import('@/containers/Expenses/ExpensesLanding/ExpensesList').then(
+        (m) => ({ default: m.ExpensesList }),
+      ),
+    ),
+    breadcrumb: intl.get('expenses_list'),
+    pageTitle: intl.get('expenses_list'),
+    hotkey: 'shift+x',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Customers
+  {
+    path: `/customers/import`,
+    component: lazy(() =>
+      import('@/containers/Customers/CustomersImport').then((m) => ({
+        default: m.CustomersImport,
+      })),
+    ),
+    backLink: true,
+    pageTitle: 'Customers Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+  },
+  {
+    path: `/customers/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Customers/CustomerForm/CustomerFormPage').then(
+        (m) => ({ default: m.CustomerFormPage }),
+      ),
+    ),
+    name: 'customer-edit',
+    breadcrumb: intl.get('edit_customer'),
+    pageTitle: intl.get('edit_customer'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/customers/new`,
+    component: lazy(() =>
+      import('@/containers/Customers/CustomerForm/CustomerFormPage').then(
+        (m) => ({ default: m.CustomerFormPage }),
+      ),
+    ),
+    name: 'customer-new',
+    breadcrumb: intl.get('new_customer'),
+    hotkey: 'ctrl+shift+c',
+    pageTitle: intl.get('new_customer'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/customers`,
+    component: lazy(() =>
+      import('@/containers/Customers/CustomersLanding/CustomersList').then(
+        (m) => ({ default: m.CustomersList }),
+      ),
+    ),
+    breadcrumb: intl.get('customers'),
+    hotkey: 'shift+c',
+    pageTitle: intl.get('customers_list'),
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/customers/contact_duplicate=/:id`,
+    component: lazy(() =>
+      import('@/containers/Customers/CustomerForm/CustomerFormPage').then(
+        (m) => ({ default: m.CustomerFormPage }),
+      ),
+    ),
+    name: 'duplicate-customer',
+    breadcrumb: intl.get('duplicate_customer'),
+    pageTitle: intl.get('new_customer'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Vendors
+  {
+    path: `/vendors/import`,
+    component: lazy(() =>
+      import('@/containers/Vendors/VendorsImport').then((m) => ({
+        default: m.VendorsImport,
+      })),
+    ),
+    backLink: true,
+    pageTitle: 'Vendors Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+  },
+  {
+    path: `/vendors/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Vendors/VendorForm/VendorFormPage').then(
+        (module) => ({ default: module.VendorFormPage }),
+      ),
+    ),
+    name: 'vendor-edit',
+    breadcrumb: intl.get('edit_vendor'),
+    pageTitle: intl.get('edit_vendor'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/vendors/new`,
+    component: lazy(() =>
+      import('@/containers/Vendors/VendorForm/VendorFormPage').then(
+        (module) => ({ default: module.VendorFormPage }),
+      ),
+    ),
+    name: 'vendor-new',
+    breadcrumb: intl.get('new_vendor'),
+    hotkey: 'ctrl+shift+v',
+    pageTitle: intl.get('new_vendor'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/vendors`,
+    component: lazy(() =>
+      import('@/containers/Vendors/VendorsLanding/VendorsList').then((m) => ({
+        default: m.VendorsList,
+      })),
+    ),
+    breadcrumb: intl.get('vendors'),
+    hotkey: 'shift+v',
+    pageTitle: intl.get('vendors_list'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/vendors/contact_duplicate=/:id`,
+    component: lazy(
+      () => import('@/containers/Vendors/VendorForm/VendorFormPage'),
+    ),
+    name: 'duplicate-vendor',
+    breadcrumb: intl.get('duplicate_vendor'),
+    pageTitle: intl.get('new_vendor'),
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Estimates
+  {
+    path: `/estimates/import`,
+    component: lazy(() =>
+      import('@/containers/Sales/Estimates/EstimatesImport').then((m) => ({
+        default: m.EstimatesImport,
+      })),
+    ),
+    name: 'estimate-edit',
+    breadcrumb: 'Estimates Import',
+    pageTitle: 'Estimates Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/estimates/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage').then(
+        (m) => ({ default: m.EstimateFormPage }),
+      ),
+    ),
+    name: 'estimate-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_estimate'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/invoices/new?from_estimate_id=/:id`,
+    component: lazy(() =>
+      import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage').then(
+        (m) => ({ default: m.EstimateFormPage }),
+      ),
+    ),
+    name: 'convert-to-invoice',
+    breadcrumb: intl.get('new_estimate'),
+    pageTitle: intl.get('new_estimate'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/estimates/new`,
+    component: lazy(() =>
+      import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage').then(
+        (m) => ({ default: m.EstimateFormPage }),
+      ),
+    ),
+    name: 'estimate-new',
+    breadcrumb: intl.get('new_estimate'),
+    hotkey: 'ctrl+shift+e',
+    pageTitle: intl.get('new_estimate'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/estimates`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/Estimates/EstimatesLanding/EstimatesList'
+      ).then((m) => ({ default: m.EstimatesList })),
+    ),
+    name: 'estimates-list',
+    breadcrumb: intl.get('estimates_list'),
+    hotkey: 'shift+e',
+    pageTitle: intl.get('estimates_list'),
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Invoices.
+  {
+    path: `/invoices/import`,
+    component: lazy(() =>
+      import('@/containers/Sales/Invoices/InvoicesImport').then((m) => ({
+        default: m.InvoicesImport,
+      })),
+    ),
+    name: 'invoice-edit',
+    breadcrumb: 'Invoices Import',
+    pageTitle: 'Invoices Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/invoices/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage').then(
+        (m) => ({ default: m.InvoiceFormPage }),
+      ),
+    ),
+    name: 'invoice-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_invoice'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/invoices/new`,
+    component: lazy(() =>
+      import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage').then(
+        (m) => ({ default: m.InvoiceFormPage }),
+      ),
+    ),
+    name: 'invoice-new',
+    breadcrumb: intl.get('new_invoice'),
+    hotkey: 'ctrl+shift+i',
+    pageTitle: intl.get('new_invoice'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/invoices`,
+    component: lazy(() =>
+      import('@/containers/Sales/Invoices/InvoicesLanding/InvoicesList').then(
+        (m) => ({ default: m.InvoicesList }),
+      ),
+    ),
+    breadcrumb: intl.get('invoices_list'),
+    hotkey: 'shift+i',
+    pageTitle: intl.get('invoices_list'),
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Sales Receipts.
+  {
+    path: `/receipts/import`,
+    component: lazy(() =>
+      import('@/containers/Sales/Receipts/SaleReceiptsImport').then((m) => ({
+        default: m.ReceiptsImport,
+      })),
+    ),
+    name: 'receipt-import',
+    breadcrumb: 'Receipts Import',
+    pageTitle: 'Receipts Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/receipts/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage').then(
+        (m) => ({ default: m.ReceiptFormPage }),
+      ),
+    ),
+    name: 'receipt-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_receipt'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/receipts/new`,
+    component: lazy(() =>
+      import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage').then(
+        (m) => ({ default: m.ReceiptFormPage }),
+      ),
+    ),
+    name: 'receipt-new',
+    breadcrumb: intl.get('new_receipt'),
+    hotkey: 'ctrl+shift+r',
+    pageTitle: intl.get('new_receipt'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/receipts`,
+    component: lazy(() =>
+      import('@/containers/Sales/Receipts/ReceiptsLanding/ReceiptsList').then(
+        (m) => ({ default: m.ReceiptsList }),
+      ),
+    ),
+    breadcrumb: intl.get('receipts_list'),
+    hotkey: 'shift+r',
+    pageTitle: intl.get('receipts_list'),
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Sales Credit notes.
+  {
+    path: `/credit-notes/import`,
+    component: lazy(() =>
+      import('@/containers/Sales/CreditNotes/CreditNotesImport').then((m) => ({
+        default: m.CreditNotesImport,
+      })),
+    ),
+    name: 'credit-note-import',
+    breadcrumb: 'Credit Notes Import',
+    pageTitle: 'Credit Notes Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/credit-notes/:id/edit`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+      ).then((m) => ({ default: m.CreditNoteFormPage })),
+    ),
+    name: 'credit-note-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('credit_note.label.edit_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/credit-notes/new/?from_invoice_id=/:id`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+      ).then((m) => ({ default: m.CreditNoteFormPage })),
+    ),
+    name: 'credit-note-new',
+    breadcrumb: intl.get('credit_note.label.new_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    pageTitle: intl.get('credit_note.label.new_credit_note'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/credit-notes/new',
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
+      ).then((m) => ({ default: m.CreditNoteFormPage })),
+    ),
+    name: 'credit-note-new',
+    breadcrumb: intl.get('credit_note.label.new_credit_note'),
+    backLink: true,
+    sidebarExpand: false,
+    pageTitle: intl.get('credit_note.label.new_credit_note'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/credit-notes',
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/CreditNotes/CreditNotesLanding/CreditNotesList'
+      ).then((m) => ({ default: m.CreditNotesList })),
+    ),
+    breadcrumb: intl.get('credit_note.label_create_note_list'),
+    pageTitle: intl.get('credit_note.label_create_note_list'),
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Payment receives
+  {
+    path: `/payments-received/import`,
+    component: lazy(() =>
+      import('@/containers/Sales/PaymentsReceived/PaymentsReceivedImport').then(
+        (m) => ({ default: m.PaymentsReceiveImport }),
+      ),
+    ),
+    name: 'payment-receive-import',
+    breadcrumb: 'Payments Received Import',
+    pageTitle: 'Payments Received Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payments-received/:id/edit`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/PaymentsReceived/PaymentReceiveForm/PaymentReceiveFormPage'
+      ).then((m) => ({ default: m.PaymentReceiveFormPage })),
+    ),
+    name: 'payment-receive-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_payment_received'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payment-received/new`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/PaymentsReceived/PaymentReceiveForm/PaymentReceiveFormPage'
+      ).then((m) => ({ default: m.PaymentReceiveFormPage })),
+    ),
+    name: 'payment-receive-new',
+    breadcrumb: intl.get('new_payment_received'),
+    pageTitle: intl.get('new_payment_received'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payments-received`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/PaymentsReceived/PaymentsLanding/PaymentsReceivedList'
+      ).then((m) => ({ default: m.PaymentsReceivedList })),
+    ),
+    breadcrumb: intl.get('payments_received_list'),
+    pageTitle: intl.get('payments_received_list'),
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Bills
+  {
+    path: `/bills/import`,
+    component: lazy(() =>
+      import('@/containers/Purchases/Bills/BillImport').then((m) => ({
+        default: m.BillsImport,
+      })),
+    ),
+    name: 'bill-edit',
+    // breadcrumb: intl.get('edit'),
+    pageTitle: 'Bills Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/bills/:id/edit`,
+    component: lazy(() =>
+      import('@/containers/Purchases/Bills/BillForm/BillFormPage').then(
+        (m) => ({ default: m.BillFormPage }),
+      ),
+    ),
+    name: 'bill-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_bill'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/bills/new`,
+    component: lazy(() =>
+      import('@/containers/Purchases/Bills/BillForm/BillFormPage').then(
+        (m) => ({ default: m.BillFormPage }),
+      ),
+    ),
+    name: 'bill-new',
+    breadcrumb: intl.get('new_bill'),
+    hotkey: 'ctrl+shift+b',
+    pageTitle: intl.get('new_bill'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/bills`,
+    component: lazy(() =>
+      import('@/containers/Purchases/Bills/BillsLanding/BillsList').then(
+        (m) => ({ default: m.BillsList }),
+      ),
+    ),
+    breadcrumb: intl.get('bills_list'),
+    hotkey: 'shift+b',
+    pageTitle: intl.get('bills_list'),
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  //  Purchases Credit note.
+  {
+    path: `/vendor-credits/import`,
+    component: lazy(() =>
+      import('@/containers/Purchases/CreditNotes/VendorCreditsImport').then(
+        (m) => ({ default: m.VendorCreditsImport }),
+      ),
+    ),
+    name: 'vendor-credits-edit',
+    breadcrumb: 'Vendor Credits Import',
+    pageTitle: 'Vendor Credits Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/vendor-credits/:id/edit`,
+    component: lazy(() =>
+      import(
+        '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+      ).then((m) => ({ default: m.VendorCreditNoteFormPage })),
+    ),
+    name: 'vendor-credits-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('vendor_credits.label.edit_vendor_credit'),
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendor-credits/new/?from_bill_id=/:id',
+    component: lazy(() =>
+      import(
+        '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+      ).then((m) => ({ default: m.VendorCreditNoteFormPage })),
+    ),
+    name: 'vendor-credits-new',
+    backLink: true,
+    sidebarExpand: false,
+    breadcrumb: intl.get('vendor_credits.label.new_vendor_credit'),
+    pageTitle: intl.get('vendor_credits.label.new_vendor_credit'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendor-credits/new',
+    component: lazy(() =>
+      import(
+        '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
+      ).then((m) => ({ default: m.VendorCreditNoteFormPage })),
+    ),
+    name: 'vendor-credits-new',
+    backLink: true,
+    sidebarExpand: false,
+    breadcrumb: intl.get('vendor_credits.label.new_vendor_credit'),
+    pageTitle: intl.get('vendor_credits.label.new_vendor_credit'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/vendor-credits',
+    component: lazy(() =>
+      import(
+        '@/containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList'
+      ).then((m) => ({ default: m.VendorsCreditNotesList })),
+    ),
+    breadcrumb: intl.get('vendor_credits.lable_vendor_credit_list'),
+    pageTitle: intl.get('vendor_credits.lable_vendor_credit_list'),
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
+  // Payment modes.
+  {
+    path: `/payments-made/import`,
+    component: lazy(() =>
+      import('@/containers/Purchases/PaymentsMade/PaymentsMadeImport').then(
+        (m) => ({ default: m.PaymentsMadeImport }),
+      ),
+    ),
+    name: 'payment-made-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: 'Bills Payments Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payments-made/:id/edit`,
+    component: lazy(() =>
+      import(
+        '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
+      ).then((m) => ({ default: m.PaymentMadeFormPage })),
+    ),
+    name: 'payment-made-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_payment_made'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payments-made/new`,
+    component: lazy(() =>
+      import(
+        '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
+      ).then((m) => ({ default: m.PaymentMadeFormPage })),
+    ),
+    name: 'payment-made-new',
+    breadcrumb: intl.get('new_payment_made'),
+    pageTitle: intl.get('new_payment_made'),
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/payments-made`,
+    component: lazy(() =>
+      import(
+        '@/containers/Purchases/PaymentsMade/PaymentsLanding/PaymentMadeList'
+      ).then((m) => ({ default: m.PaymentMadeList })),
+    ),
+    breadcrumb: intl.get('payments_made_list'),
+    pageTitle: intl.get('payments_made_list'),
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/financial-review',
+    component: lazy(() =>
+      import('@/containers/FinancialReview/FinancialReviewPage').then((m) => ({
+        default: m.FinancialReviewPage,
+      })),
+    ),
+    pageTitle: 'Financial Review',
+    breadcrumb: 'Financial Review',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/connections',
+    component: lazy(() =>
+      import('@/containers/Connections/ConnectionsPage').then((m) => ({
+        default: m.ConnectionsPage,
+      })),
+    ),
+    pageTitle: 'Connections',
+    breadcrumb: 'Connections',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/crypto-wallets',
+    component: lazy(() =>
+      import('@/containers/CryptoWallets/CryptoWalletsPage').then((m) => ({
+        default: m.CryptoWalletsPage,
+      })),
+    ),
+    pageTitle: 'Crypto Wallets',
+    breadcrumb: 'Crypto Wallets',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/assets-credit',
+    component: lazy(() =>
+      import('@/containers/AssetsCredit/AssetsCreditPage').then((m) => ({
+        default: m.AssetsCreditPage,
+      })),
+    ),
+    pageTitle: 'Vehicles & Credit',
+    breadcrumb: 'Vehicles & Credit',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/source-documents',
+    component: lazy(() =>
+      import('@/containers/SourceDocuments/SourceDocumentsPage').then((m) => ({
+        default: m.SourceDocumentsPage,
+      })),
+    ),
+    pageTitle: 'Source Documents',
+    breadcrumb: 'Source Documents',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Cash flow
+  {
+    path: `/cashflow-accounts/:id/transactions`,
+    component: lazy(() =>
+      import(
+        '@/containers/CashFlow/AccountTransactions/AccountTransactionsList'
+      ).then((m) => ({ default: m.AccountTransactionsList })),
+    ),
+    sidebarExpand: false,
+    backLink: true,
+    pageTitle: intl.get('banking.label_account_transcations'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+  },
+  {
+    path: `/cashflow-accounts/:id/import`,
+    component: lazy(() =>
+      import(
+        '@/containers/CashFlow/ImportIUncategorizedTransactions/ImportUncategorizedTransactionsPage'
+      ).then((m) => ({ default: m.ImportUncategorizedTransactions })),
+    ),
+    backLink: true,
+    sidebarExpand: false,
+    pageTitle: 'Bank Transactions Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+  },
+  {
+    path: `/cashflow-accounts`,
+    component: lazy(() =>
+      import(
+        '@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'
+      ).then((m) => ({ default: m.CashFlowAccountsList })),
+    ),
+    pageTitle: intl.get('siebar.banking.bank_accounts'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+  },
+  {
+    path: `/transactions-locking`,
+    component: lazy(() =>
+      import('@/containers/TransactionsLocking/TransactionsLockingPage').then(
+        (m) => ({ default: m.TransactionsLockingPage }),
+      ),
+    ),
+    pageTitle: intl.get('sidebar.transactions_locaking'),
+  },
+  {
+    path: '/tax-rates/import',
+    component: lazy(() =>
+      import('@/containers/TaxRates/containers/TaxRatesImport').then((m) => ({
+        default: m.TaxRatesImport,
+      })),
+    ),
+    pageTitle: 'Tax Rates',
+    feature: Features.SalesTax,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/tax-rates',
+    component: lazy(() =>
+      import('@/containers/TaxRates/pages/TaxRatesLanding').then((m) => ({
+        default: m.TaxRatesLanding,
+      })),
+    ),
+    pageTitle: 'Tax Rates',
+    feature: Features.SalesTax,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Bank Rules
+  {
+    path: '/bank-rules',
+    component: lazy(() =>
+      import('@/containers/Banking/Rules/RulesList/RulesLandingPage').then(
+        (m) => ({ default: m.RulesLandingPage }),
+      ),
+    ),
+    pageTitle: 'Bank Rules',
+    breadcrumb: 'Bank Rules',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Homepage
+  {
+    path: `/`,
+    component: lazy(() =>
+      import('@/containers/Homepage/Homepage').then((m) => ({
+        default: m.Homepage,
+      })),
+    ),
+    breadcrumb: intl.get('homepage'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+];

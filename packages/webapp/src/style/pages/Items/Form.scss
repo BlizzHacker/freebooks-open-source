@@ -1,0 +1,34 @@
+.page-form--item {
+  $self: '.page-form';
+  padding: 20px;
+
+  .bp4-form-group {
+    max-width: 500px;
+    margin-bottom: 14px;
+
+    &.bp4-inline {
+      .bp4-label {
+        min-width: 140px;
+      }
+    }
+    .bp4-form-content {
+      width: 100%;
+    }
+  }
+
+  .form-group--sellable,
+  .form-group--purchasable {
+    margin-bottom: 1rem;
+  }
+
+  .form-group--purchase-description,
+  .form-group--sell-description {
+    textarea {
+      width: 100%;
+    }
+  }
+
+  .bp4-tooltip-indicator {
+    border-bottom: 1px dashed #d0d0d0;
+  }
+}

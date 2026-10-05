@@ -1,0 +1,28 @@
+.authTransition {
+  &-enter {
+    opacity: 0;
+  }
+
+  &-enter-active {
+    opacity: 1;
+    transition: opacity 250ms ease-in-out;
+  }
+
+  &-enter-done {
+    opacity: 1;
+  }
+
+  &-exit {
+    opacity: 1;
+  }
+
+  &-exit-active {
+    opacity: 0.5;
+    transition: opacity 250ms ease-in-out;
+  }
+
+  &-exit-active {
+    opacity: 0;
+    display: none;
+  }
+}

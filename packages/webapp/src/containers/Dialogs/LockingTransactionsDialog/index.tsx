@@ -1,0 +1,47 @@
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import type { LockingTransactionsDialogPayload } from './types';
+import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
+
+const LockingTransactionsDialogContent = React.lazy(() =>
+  import('./LockingTransactionsDialogContent').then((m) => ({
+    default: m.LockingTransactionsDialogContent,
+  })),
+);
+
+interface LockingTransactionsDialogProps {
+  dialogName: string;
+  payload: LockingTransactionsDialogPayload;
+  isOpen: boolean | undefined;
+}
+
+/**
+ * Locking Transactions dialog
+ */
+function LockingTransactionsDialog({
+  dialogName,
+  payload: { module, isEnabled } = {},
+  isOpen,
+}: LockingTransactionsDialogProps): React.ReactElement {
+  return (
+    <Dialog
+      name={dialogName}
+      autoFocus={true}
+      title={<T id={'locking_transactions.dialog.label'} />}
+      canEscapeKeyClose={true}
+      isOpen={isOpen}
+      className={'dialog--transaction--locking'}
+    >
+      <DialogSuspense>
+        <LockingTransactionsDialogContent
+          moduleName={module ?? ''}
+          dialogName={dialogName}
+          isEnabled={!!isEnabled}
+        />
+      </DialogSuspense>
+    </Dialog>
+  );
+}
+
+export const index = FF.pipe(LockingTransactionsDialog, withDialogRedux());

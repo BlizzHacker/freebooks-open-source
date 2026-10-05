@@ -1,0 +1,118 @@
+// @ts-nocheck
+import { MenuItem, Intent } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { TextStatus, Icon, Choose, T } from '@/components';
+import { AbilitySubject, VendorCreditAction } from '@/constants/abilityOption';
+import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+
+/**
+ * Vendor credit universal search item select action.
+ */
+function VendorCreditUniversalSearchSelectComponent({
+  // #ownProps
+  resourceType,
+  resourceId,
+  onAction,
+
+  // #withDrawerActions
+  openDrawer,
+}) {
+  if (resourceType === RESOURCES_TYPES.VENDOR_CREDIT) {
+    openDrawer(DRAWERS.VENDOR_CREDIT_DETAILS, {
+      vendorCreditId: resourceId,
+    });
+    onAction && onAction();
+  }
+  return null;
+}
+
+export const VendorCreditUniversalSearchSelect = withDrawerActions(
+  VendorCreditUniversalSearchSelectComponent,
+);
+
+/**
+ * Status accessor.
+ */
+function VendorCreditUniversalSearchStatus({ receipt }) {
+  return (
+    <Choose>
+      <Choose.When condition={receipt.isClosed}>
+        <TextStatus intent={Intent.SUCCESS}>
+          <T id={'closed'} />
+        </TextStatus>
+      </Choose.When>
+
+      <Choose.When condition={receipt.isOpen}>
+        <TextStatus intent={Intent.WARNING}>
+          <T id={'closed'} />
+        </TextStatus>
+      </Choose.When>
+
+      <Choose.Otherwise>
+        <TextStatus intent={Intent.NONE}>
+          <T id={'draft'} />
+        </TextStatus>
+      </Choose.Otherwise>
+    </Choose>
+  );
+}
+
+/**
+ * Credit note universal search item.
+ */
+export function VendorCreditUniversalSearchItem(
+  item,
+  { handleClick, modifiers, query },
+) {
+  return (
+    <MenuItem
+      active={modifiers.active}
+      text={
+        <div>
+          <div>{item.text}</div>
+          <span class="bp4-text-muted">
+            {item.reference.vendorCreditNumber}{' '}
+            <Icon icon={'caret-right-16'} iconSize={16} />
+            {item.reference.formattedVendorCreditDate}
+          </span>
+        </div>
+      }
+      label={
+        <>
+          <div class="amount">{item.reference.formattedAmount}</div>
+          <VendorCreditUniversalSearchStatus receipt={item.reference} />
+        </>
+      }
+      onClick={handleClick}
+      className={'universal-search__item--receipt'}
+    />
+  );
+}
+
+/**
+ * Transformes receipt resource item to search item.
+ */
+const transformVendorCreditsToSearch = (vendorCredit) => ({
+  id: vendorCredit.id,
+  text: vendorCredit.vendor?.displayName ?? '',
+  label: vendorCredit.formattedAmount ?? '',
+  reference: vendorCredit,
+});
+
+/**
+ * Credit note universal search bind configuration.
+ */
+export const universalSearchVendorCreditBind = () => ({
+  resourceType: RESOURCES_TYPES.VENDOR_CREDIT,
+  optionItemLabel: intl.get('vendor_credit.label'),
+  selectItemAction: VendorCreditUniversalSearchSelect,
+  itemRenderer: VendorCreditUniversalSearchItem,
+  itemSelect: transformVendorCreditsToSearch,
+  permission: {
+    ability: VendorCreditAction.View,
+    subject: AbilitySubject.VendorCredit,
+  },
+});

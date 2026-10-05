@@ -1,0 +1,52 @@
+.root {}
+
+.detail_panel {
+  :global .card {
+    padding: 22px 15px;
+  }
+
+  &_header {
+    margin-bottom: 30px;
+  }
+  &_table {
+    :global .bigcapital-datatable {
+
+      .thead,
+      .tbody {
+        .invoice_amount,
+        .amount_due,
+        .payment_amount {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  &_footer {
+    display: flex;
+
+    :global .total_lines {
+      margin-left: auto;
+    }
+    :global .total_lines_line {
+
+      .amount,
+      .title {
+        width: 180px;
+      }
+
+      .amount {
+        text-align: right;
+      }
+    }
+  }
+
+  .total_line {
+    &_subtotal {
+      border-bottom: 1px solid #000;
+    }
+    &_total {
+      
+    }
+  }
+}

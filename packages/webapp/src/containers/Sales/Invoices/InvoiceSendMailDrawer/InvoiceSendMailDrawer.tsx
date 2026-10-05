@@ -1,0 +1,42 @@
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { Drawer, DrawerSuspense } from '@/components';
+import { withDrawers } from '@/containers/Drawer/withDrawers';
+
+const InvoiceSendMailContent = React.lazy(() =>
+  import('./InvoiceSendMailContent').then((module) => ({
+    default: module.InvoiceSendMailContent,
+  })),
+);
+
+interface InvoiceSendMailDrawerProps {
+  name: string;
+  isOpen?: boolean;
+  payload?: any;
+}
+
+function InvoiceSendMailDrawerRoot({
+  name,
+
+  // #withDrawer
+  isOpen,
+  payload,
+}: InvoiceSendMailDrawerProps) {
+  return (
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      payload={payload}
+      size={'calc(100% - 10px)'}
+    >
+      <DrawerSuspense>
+        <InvoiceSendMailContent />
+      </DrawerSuspense>
+    </Drawer>
+  );
+}
+
+export const InvoiceSendMailDrawer = FF.pipe(
+  InvoiceSendMailDrawerRoot,
+  withDrawers(),
+);

@@ -1,0 +1,26 @@
+node_modules/
+
+# Docker volumes data directory
+/data
+
+# Production env file 
+.env
+
+test-results/
+.qodo
+
+# Playwright shared auth state (regenerated per run by globalSetup)
+e2e/.auth/
+
+
+.pnpm-store
+# Private beta state and generated desktop packages
+/deploy/beta/.env
+/deploy/beta/.env.tmp
+/deploy/beta/.owner-created
+/deploy/beta/backups/
+/clients/desktop/dist/
+/clients/desktop/bundle/
+__pycache__/
+
+/deploy/beta/smoke-results.json

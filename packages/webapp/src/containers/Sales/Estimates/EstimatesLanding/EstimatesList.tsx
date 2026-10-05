@@ -1,0 +1,60 @@
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { EstimatesActionsBar } from './EstimatesActionsBar';
+import { EstimatesDataTable } from './EstimatesDataTable';
+import { EstimatesListDialogs } from './EstimatesListDialogs';
+import { EstimatesListDrawers } from './EstimatesListDrawers';
+import { EstimatesListProvider } from './EstimatesListProvider';
+import { withEstimates } from './withEstimates';
+import { withEstimatesActions } from './withEstimatesActions';
+import type { WithEstimatesProps } from './withEstimates';
+import type { WithEstimatesActionsProps } from './withEstimatesActions';
+import { DashboardPageContent } from '@/components';
+import '@/style/pages/SaleEstimate/List.scss';
+import { transformTableStateToQuery } from '@/utils';
+
+interface EstimatesListProps
+  extends Pick<
+      WithEstimatesProps,
+      'estimatesTableState' | 'estimatesTableStateChanged'
+    >,
+    WithEstimatesActionsProps {}
+
+function EstimatesListInner({
+  estimatesTableState,
+  estimatesTableStateChanged,
+  resetEstimatesTableState,
+  resetEstimatesSelectedRows,
+}: EstimatesListProps) {
+  React.useEffect(
+    () => () => {
+      resetEstimatesTableState();
+      resetEstimatesSelectedRows();
+    },
+    [resetEstimatesSelectedRows, resetEstimatesTableState],
+  );
+
+  return (
+    <EstimatesListProvider
+      query={transformTableStateToQuery(estimatesTableState)}
+      tableStateChanged={estimatesTableStateChanged}
+    >
+      <EstimatesActionsBar />
+      <EstimatesListDrawers />
+      <EstimatesListDialogs />
+
+      <DashboardPageContent>
+        <EstimatesDataTable />
+      </DashboardPageContent>
+    </EstimatesListProvider>
+  );
+}
+
+export const EstimatesList = FF.pipe(
+  EstimatesListInner,
+  withEstimatesActions,
+  withEstimates(({ estimatesTableState, estimatesTableStateChanged }) => ({
+    estimatesTableState,
+    estimatesTableStateChanged,
+  })),
+);

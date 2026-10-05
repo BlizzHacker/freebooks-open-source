@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#101b2a" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="Open your private FreeBooks server and add receipts from your phone." />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; manifest-src 'self'; worker-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'" />
+    <link rel="icon" href="/assets/freebooks-app-icon-192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/freebooks-app-icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/app-launcher.css" />
+    <script src="/app-launcher.js" defer></script>
+    <title>FreeBooks · Your servers</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="masthead">
+        <div class="brand">
+          <img src="/assets/freebooks-app-icon-192.png" width="48" height="48" alt="" />
+          <span>FreeBooks<span class="brand__dot">.dev</span></span>
+        </div>
+        <span class="masthead__label">Private finance workspace</span>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero__copy">
+            <p class="eyebrow">Your money, organized</p>
+            <h1 id="hero-title">The finances you need, in your hands.</h1>
+            <p>Review accounts, find source documents, and capture receipts from your phone. Your data stays on the FreeBooks server you choose.</p>
+            <div class="hero__actions">
+              <a class="button button--primary" href="/source-documents">Open source documents <span aria-hidden="true">↗</span></a>
+              <a class="button button--quiet" href="/cashflow-accounts">Open banking</a>
+            </div>
+          </div>
+          <div class="hero__visual" aria-hidden="true">
+            <div class="visual__line"></div>
+            <div class="visual__sheet">
+              <div class="visual__badge">FREEBOOKS</div>
+              <div class="visual__row"><span></span><strong></strong></div>
+              <div class="visual__row"><span></span><strong></strong></div>
+              <div class="visual__row"><span></span><strong></strong></div>
+              <div class="visual__stamp">PRIVATE</div>
+            </div>
+            <div class="visual__camera"><span>+</span></div>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="servers-title">
+          <div class="section__heading">
+            <div>
+              <p class="eyebrow">One app, your servers</p>
+              <h2 id="servers-title">Choose a FreeBooks server</h2>
+              <p>Each server has its own sign-in. This device saves only server names and HTTPS addresses.</p>
+            </div>
+            <button class="button button--outline" id="install-button" type="button" hidden>Install app</button>
+          </div>
+          <div id="server-list" class="server-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="section section--add" aria-labelledby="add-title">
+          <div class="section__heading">
+            <div>
+              <p class="eyebrow">Self-hosted, on your terms</p>
+              <h2 id="add-title">Add another server</h2>
+              <p>Only add a FreeBooks server that you own or trust.</p>
+            </div>
+          </div>
+          <form id="server-form" class="server-form" novalidate>
+            <label>Server name
+              <input id="server-name" name="name" type="text" maxlength="64" autocomplete="off" placeholder="My business server" required />
+            </label>
+            <label>Server address
+              <input id="server-url" name="url" type="url" inputmode="url" maxlength="2048" autocapitalize="none" spellcheck="false" autocomplete="url" placeholder="https://books.example.com" required />
+            </label>
+            <button class="button button--primary" type="submit">Add server</button>
+          </form>
+          <p id="form-message" class="form-message" role="status"></p>
+        </section>
+
+        <section class="footer-note">
+          <span class="footer-note__shield" aria-hidden="true">◆</span>
+          <p>Private source files and account data are available only after sign-in on the selected server. This launcher does not keep financial records offline.</p>
+        </section>
+      </main>
+      <footer class="site-footer">
+        <span>FreeBooks.dev · Internal testing</span>
+        <span id="install-help">To install, use your browser’s “Install app” or “Add to home screen” command.</span>
+      </footer>
+    </div>
+  </body>
+</html>

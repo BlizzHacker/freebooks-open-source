@@ -1,0 +1,31 @@
+.dialog--notify-vis-sms {
+  width: 800px;
+
+  .bp4-dialog-body {
+    .bp4-form-group {
+      margin-bottom: 15px;
+      margin-top: 15px;
+
+      label.bp4-label {
+        margin-bottom: 3px;
+        font-size: 13px;
+      }
+    }
+
+    .form-group {
+      &--sms_message {
+        .bp4-form-content {
+          textarea {
+            width: 100%;
+            min-width: 100%;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .bp4-dialog-footer {
+    padding-top: 10px;
+  }
+}

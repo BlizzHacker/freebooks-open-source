@@ -1,0 +1,146 @@
+@mixin dark-mode {
+  .bp4-dark & {
+    @content;
+  }
+}
+
+//
+// Financial sheet - Drawer header.
+// --------------------
+.financial-header-drawer {
+    --x-color-background: #fff;
+    --x-color-backdrop-background: rgba(2, 9, 19, 0.65);
+
+    --x-color-tabs-border: #c3cdd5;
+    --x-color-tabs-tab-item-background: var(--color-dark-gray3);
+    --x-color-tabs-indicator-background: #edf5ff;
+    --x-color-tabs-indicator-border: #0350f8;
+    
+    --x-color-footer-background: #ecf0f3;
+    --x-color-footer-border: #c3cdd5;
+
+  @include dark-mode {
+    --x-color-background: var(--color-dark-gray1);
+    --x-color-backdrop-background: rgba(2, 9, 19, 0.65);
+
+    --x-color-tabs-border: var(--color-dark-gray2);
+    --x-color-tabs-tab-item-background: var(--color-dark-gray3);
+    --x-color-tabs-indicator-background: var(--color-dark-gray2);
+    --x-color-tabs-indicator-border: var(--color-primary);
+    
+    --x-color-footer-background: var(--color-dark-gray3);
+    --x-color-footer-border: var(--color-dark-gray1);
+  }
+
+  padding: 25px 26px 25px;
+  position: absolute;
+  top: 101px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+
+  &.is-hidden {
+    visibility: hidden;
+  }
+  .bp4-drawer {
+    box-shadow: 0 0 0 transparent;
+    max-height: 550px;
+    height: 100%;
+    padding-bottom: 49px;
+
+    &,
+    .bp4-dark & {
+      background-color: var(--x-color-background);
+    }
+    > form {
+      display: flex;
+      flex-direction: column;
+      flex: 1 0 0;
+      height: 100%;
+    }
+    .bp4-drawer-backdrop {
+      background-color: var(--x-color-backdrop-background);
+    }
+  }
+
+  .bp4-button.button--submit-filter {
+    min-height: 34px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .radio-group---accounting-basis {
+    .bp4-label {
+      margin-bottom: 12px;
+    }
+  }
+
+  .bp4-tabs {
+    height: 100%;
+
+    &.bp4-vertical > .bp4-tab-panel {
+      flex: 1 0 0;
+      border-top: 24px solid transparent;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 24px;
+      overflow: auto;
+    }
+  }
+
+  .bp4-tabs.bp4-vertical {
+    flex: 1 0 0;
+
+    .bp4-tab-list {
+      width: 220px;
+      border-right: 1px solid var(--color-dark-gray2);
+      padding-top: 10px;
+
+      > *:not(:last-child) {
+        margin-right: 0;
+      }
+      .bp4-tab-indicator-wrapper {
+        width: 100%;
+
+        .bp4-tab-indicator {
+          border-left: 3px solid var(--x-color-tabs-indicator-border);
+          background-color: var(--x-color-tabs-indicator-background);
+          border-radius: 0;
+        }
+      }
+
+      .bp4-tab {
+        color: var(--color-financial-report-drawer-tab-text);
+        line-height: 45px;
+        border-radius: 0;
+        padding-left: 14px;
+        padding-right: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  &__footer {
+    background-color: var(--x-color-footer-background);
+    border-top: 1px solid var(--x-color-footer-border);
+    padding: 8px;
+    padding-left: 230px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  .row {
+    margin-left: -0.85rem;
+    margin-right: -0.85rem;
+
+    .col {
+      padding-left: 0.85rem;
+      padding-right: 0.85rem;
+    }
+  }
+  .bp4-popover-target {
+    .bp4-tag-input {
+      height: auto;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "scannedAt": "2026-10-04T22:42:35.749Z",
+  "scope": "pnpm recursive production dependency tree; inherited manifests include build tooling in production dependencies. Registry advisory presence does not establish endpoint exploitability.",
+  "before": {
+    "advisoryCount": 193,
+    "counts": {
+      "moderate": 85,
+      "high": 93,
+      "low": 15
+    }
+  },
+  "after": {
+    "advisoryCount": 14,
+    "counts": {
+      "moderate": 9,
+      "high": 3,
+      "low": 2
+    }
+  },
+  "readyForPublicProduction": false,
+  "fullLock": {
+    "packages": 2268,
+    "advisoryCount": 108,
+    "counts": {
+      "critical": 4,
+      "high": 51,
+      "moderate": 44,
+      "low": 9
+    }
+  },
+  "releaseStage": "alpha",
+  "version": "0.1.0-alpha.1",
+  "publicSourceRepository": "https://github.com/BlizzHacker/freebooks-open-source",
+  "distributionScope": "Public source and alpha artifacts for evaluation; localhost or trusted-user deployments. Production readiness remains pending.",
+  "privateDevelopmentHistoryPublished": false
+}

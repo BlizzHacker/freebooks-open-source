@@ -1,0 +1,140 @@
+import { MenuItem, Intent } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { CreditNote } from '@bigcapital/sdk-ts';
+import type { ItemRendererProps } from '@blueprintjs/select';
+import { Icon, Choose, T, TextStatus } from '@/components';
+import { AbilitySubject, CreditNoteAction } from '@/constants/abilityOption';
+import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+
+interface CreditNoteUniversalSearchSelectComponentProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+  onAction?: () => void;
+}
+
+/**
+ * Credit note universal search item select action.
+ */
+function CreditNoteUniversalSearchSelectComponent({
+  // #ownProps
+  resourceType,
+  resourceId,
+  onAction,
+
+  // #withDrawerActions
+  openDrawer,
+}: CreditNoteUniversalSearchSelectComponentProps) {
+  if (resourceType === RESOURCES_TYPES.CREDIT_NOTE) {
+    openDrawer(DRAWERS.CREDIT_NOTE_DETAILS, { creditNoteId: resourceId });
+    onAction && onAction();
+  }
+  return null;
+}
+
+export const CreditNoteUniversalSearchSelect = withDrawerActions(
+  CreditNoteUniversalSearchSelectComponent,
+);
+
+/**
+ * Status accessor.
+ */
+interface CreditNoteUniversalSearchStatusProps {
+  receipt: CreditNote;
+}
+
+function CreditNoteUniversalSearchStatus({
+  receipt,
+}: CreditNoteUniversalSearchStatusProps) {
+  return (
+    <Choose>
+      <Choose.When condition={receipt.isClosed}>
+        <TextStatus intent={Intent.SUCCESS}>
+          <T id={'closed'} />
+        </TextStatus>
+      </Choose.When>
+
+      <Choose.When condition={receipt.isOpen}>
+        <TextStatus intent={Intent.WARNING}>
+          <T id={'open'} />
+        </TextStatus>
+      </Choose.When>
+
+      <Choose.Otherwise>
+        <TextStatus intent={Intent.NONE}>
+          <T id={'draft'} />
+        </TextStatus>
+      </Choose.Otherwise>
+    </Choose>
+  );
+}
+
+/**
+ * Credit note universal search item.
+ */
+interface CreditNoteUniversalSearchItemType {
+  id: number;
+  text: string;
+  label: string;
+  reference: CreditNote;
+}
+
+export function CreditNoteUniversalSearchItem(
+  item: CreditNoteUniversalSearchItemType,
+  { handleClick, modifiers }: ItemRendererProps,
+) {
+  return (
+    <MenuItem
+      active={modifiers.active}
+      text={
+        <div>
+          <div>{item.text}</div>
+          <span className="bp4-text-muted">
+            {item.reference.creditNoteNumber}{' '}
+            <Icon icon={'caret-right-16'} iconSize={16} />
+            {item.reference.formattedCreditNoteDate}
+          </span>
+        </div>
+      }
+      labelElement={
+        <>
+          <div className="amount">{item.reference.formattedAmount}</div>
+          <CreditNoteUniversalSearchStatus receipt={item.reference} />
+        </>
+      }
+      onClick={handleClick}
+      className={'universal-search__item--receipt'}
+    />
+  );
+}
+
+/**
+ * Transformes receipt resource item to search item.
+ */
+const transformReceiptsToSearch = (
+  creditNote: CreditNote,
+): CreditNoteUniversalSearchItemType => ({
+  id: creditNote.id,
+  text: creditNote.customer?.displayName ?? '',
+  label: creditNote.formattedAmount ?? '',
+  reference: creditNote,
+});
+
+/**
+ * Credit note universal search bind configuration.
+ */
+export const universalSearchCreditNoteBind = () => ({
+  resourceType: RESOURCES_TYPES.CREDIT_NOTE,
+  optionItemLabel: intl.get('credit_note.label'),
+  selectItemAction: CreditNoteUniversalSearchSelect,
+  itemRenderer: CreditNoteUniversalSearchItem,
+  itemSelect: transformReceiptsToSearch,
+  permission: {
+    ability: CreditNoteAction.View,
+    subject: AbilitySubject.CreditNote,
+  },
+});

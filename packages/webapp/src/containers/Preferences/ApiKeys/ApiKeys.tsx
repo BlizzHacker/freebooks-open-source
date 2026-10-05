@@ -1,0 +1,46 @@
+import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
+import React, { useEffect } from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { ApiKeysDataTable } from './ApiKeysDataTable';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import { Card } from '@/components';
+import { CLASSES } from '@/constants/classes';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+
+type ApiKeysPreferencesProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
+
+/**
+ * API Keys preferences page.
+ */
+function ApiKeysPreferences({
+  // #withDashboardActions
+  changePreferencesPageTitle,
+}: ApiKeysPreferencesProps) {
+  useEffect(() => {
+    changePreferencesPageTitle(intl.get('api_key.title'));
+  }, [changePreferencesPageTitle]);
+
+  return (
+    <div
+      className={classNames(
+        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
+        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_USERS,
+      )}
+    >
+      <ApiKeysPreferencesCard>
+        <ApiKeysDataTable />
+      </ApiKeysPreferencesCard>
+    </div>
+  );
+}
+
+const ApiKeysPreferencesCard = styled(Card)`
+  padding: 0;
+`;
+
+export const ApiKeys = FF.pipe(ApiKeysPreferences, withDashboardActions);

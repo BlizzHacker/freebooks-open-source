@@ -1,0 +1,11 @@
+.freebooks-login { padding: 18px 12px; color: #152d45; }
+.freebooks-login__eyebrow { color: #0c8e83; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.freebooks-login h2 { font-size: 25px; margin: 10px 0 20px; }
+.freebooks-login form { display:flex; flex-direction:column; gap:10px; }
+.freebooks-login label { font-weight:600; }
+.freebooks-login input { min-height:44px; border:1px solid #cbd6e0; border-radius:8px; padding:10px; }
+.freebooks-login button { min-height:44px; background:#087e75; color:white; border:0; border-radius:8px; padding:10px 16px; font-weight:700; cursor:pointer; }
+.freebooks-login button:disabled { opacity:.6; }
+.freebooks-login a { margin:4px 0; }
+.freebooks-login__error { color:#b72e36; }
+.freebooks-login__help { color:#66768a; margin:20px 0 0; font-size:13px; }

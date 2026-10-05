@@ -1,0 +1,44 @@
+// Accountant.
+// ---------------------------------
+.preferences-page__inside-content--accountant {
+  .card {
+    padding: 25px;
+
+    .card__footer {
+      padding-top: 16px;
+      border-top: 1px solid #e0e7ea;
+      margin-top: 30px;
+
+      .bp4-button {
+        min-width: 65px;
+
+        + .bp4-button {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .form-group--select-list {
+    button {
+      min-width: 250px;
+    }
+  }
+  .bp4-form-group {
+    .bp4-form-helper-text {
+      margin-top: 7px;
+    }
+
+    label.bp4-label {
+      margin-bottom: 7px;
+    }
+  }
+  .bp4-form-group.accounts-checkbox {
+    .bp4-form-group.bp4-inline {
+      margin-bottom: 7px;
+    }
+    .bp4-control.bp4-inline {
+      margin-bottom: 0;
+    }
+  }
+}

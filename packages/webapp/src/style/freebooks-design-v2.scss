@@ -1,0 +1,190 @@
+/* Shared FreeBooks workspace treatment across the inherited accounting screens. */
+:root {
+  --fb-ring: rgba(17, 175, 145, .24);
+  --fb-soft: #edf8f5;
+  --fb-heading: #173444;
+  --fb-subtle: #5d747c;
+}
+body.bp4-dark {
+  --fb-ring: rgba(89, 227, 188, .24);
+  --fb-soft: #123a43;
+  --fb-heading: #edf8f8;
+  --fb-subtle: #a9c1c6;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+}
+.dashboard__topbar {
+  border-bottom: 1px solid var(--color-dashboard-topbar-border-color);
+}
+.dashboard__title h1 { letter-spacing: -.035em; }
+.sidebar {
+  border-right: 1px solid rgba(171, 232, 220, .12);
+}
+.sidebar-menu .bp4-menu-item {
+  min-height: 42px;
+  margin: 2px 9px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  color: #d9e7e9;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+.sidebar-menu .bp4-menu-item .bp4-icon {
+  color: #9fe4d2;
+}
+.sidebar-menu .bp4-menu-item.freebooks-primary-nav {
+  min-height: 42px;
+  margin: 2px 9px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  color: #e8f6f3;
+  font-weight: 600;
+  letter-spacing: .005em;
+}
+.sidebar-menu .bp4-menu-item.freebooks-primary-nav .bp4-icon {
+  color: #9fe4d2;
+}
+.sidebar-menu .bp4-menu-item.freebooks-connections-nav {
+  background: rgba(95, 231, 190, .13);
+  border: 1px solid rgba(129, 235, 204, .22);
+}
+.sidebar-menu .bp4-menu-item.freebooks-primary-nav:hover,
+.sidebar-menu .bp4-menu-item.freebooks-primary-nav.bp4-active {
+  background: rgba(94, 230, 188, .2);
+  color: #fff;
+}
+.sidebar-menu .bp4-menu-item-labeler {
+  color: #91b4b8;
+  font-size: 10px;
+  font-weight: 820;
+}
+.dashboard__insider,
+.dashboard__page-content,
+.preferences-page__inside-content {
+  min-width: 0;
+}
+.dashboard__actions-bar {
+  border-bottom: 1px solid var(--color-dashboard-actionsbar-border);
+  background: var(--color-dashboard-card-background);
+}
+.dashboard__actions-bar .bp4-button {
+  border-radius: 9px;
+  font-weight: 650;
+}
+.bp4-card,
+.dashboard__card,
+.bank-account-card {
+  border-color: var(--color-dashboard-card-border);
+  border-radius: 14px;
+}
+.bp4-button:not(.bp4-minimal) {
+  border-radius: 9px;
+  font-weight: 650;
+}
+.bp4-button.bp4-intent-primary {
+  box-shadow: 0 4px 13px rgba(8, 137, 112, .15);
+}
+.bp4-input,
+.bp4-html-select select,
+.bp4-tag-input,
+.bp4-text-area {
+  border-radius: 9px;
+}
+.bp4-input:focus,
+.bp4-html-select select:focus,
+.bp4-text-area:focus {
+  box-shadow: 0 0 0 3px var(--fb-ring);
+}
+.bp4-form-group .bp4-label {
+  color: var(--fb-heading);
+  font-size: 12px;
+  font-weight: 700;
+}
+.bp4-callout {
+  border-radius: 11px;
+}
+.bp4-tabs .bp4-tab-list {
+  gap: 2px;
+  border-bottom: 1px solid var(--color-dashboard-card-border);
+}
+.bp4-tabs .bp4-tab {
+  min-height: 36px;
+  padding: 7px 10px;
+  border-radius: 7px 7px 0 0;
+  font-weight: 650;
+}
+.bp4-tabs .bp4-tab[aria-selected='true'] {
+  background: var(--fb-soft);
+  color: var(--color-primary);
+}
+.bp4-dialog,
+.bp4-drawer {
+  border-radius: 14px;
+}
+.bp4-dialog .bp4-dialog-header,
+.bp4-drawer .bp4-drawer-header {
+  border-bottom: 1px solid var(--color-dashboard-card-border);
+}
+.preferences-sidebar__menu .bp4-menu-item {
+  border-radius: 8px;
+}
+.dashboard__datatable {
+  border: 1px solid var(--color-dashboard-datatable-border);
+}
+.bigcapital-datatable .thead,
+.bigcapital-datatable .table .thead {
+  font-weight: 750;
+}
+.freebooks-capture-cta {
+  background: var(--fb-soft) !important;
+  color: var(--color-primary) !important;
+  border: 1px solid var(--fb-ring) !important;
+}
+.freebooks-capture-cta:hover {
+  background: var(--color-dashboard-navbar-item-hover-background) !important;
+}
+@media (max-width: 800px) {
+  .dashboard__topbar { z-index: 800; }
+  .dashboard__title h1 { max-width: min(55vw, 260px); }
+  .dashboard__actions-bar .bp4-navbar {
+    padding: 4px 8px;
+  }
+  .dashboard__datatable,
+  .bp4-card {
+    box-shadow: 0 4px 13px rgba(4, 34, 40, .06);
+  }
+}
+
+
+/* High contrast actions inside the owner workspace. */
+.freebooks-home a.freebooks-action,
+.freebooks-connections a.freebooks-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 10px;
+  font-weight: 750;
+  text-decoration: none;
+}
+.freebooks-home a.freebooks-action--primary,
+.freebooks-connections a.freebooks-action--primary {
+  background: #72edc9;
+  border-color: #72edc9;
+  color: #073a3d !important;
+}
+.freebooks-home a.freebooks-action--primary:hover,
+.freebooks-connections a.freebooks-action--primary:hover {
+  background: #adf6dc;
+  border-color: #adf6dc;
+  color: #073a3d !important;
+}
+.freebooks-home a.freebooks-action--quiet {
+  color: #fff !important;
+}
+.freebooks-home a.freebooks-action--quiet:hover { color: #fff !important; }
+.freebooks-workspace-nav { flex-shrink: 0; }
+.freebooks-capture-cta { white-space: nowrap; }

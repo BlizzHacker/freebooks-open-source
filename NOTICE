@@ -1,0 +1,31 @@
+FreeBooks attribution notice — 0.1.0-alpha.1
+
+Public corresponding source:
+https://github.com/BlizzHacker/freebooks-open-source
+
+The public source repository starts from an audited export. Private development
+history, personal documents and production configuration are not distributed.
+
+FreeBooks is a modified work based on Bigcapital:
+https://github.com/bigcapitalhq/bigcapital
+
+Upstream project authors and contributors retain copyright in their work.
+FreeBooks contributors retain copyright in their modifications.
+The original LICENSE file is preserved without alteration.
+
+The upstream repository identifies its open-source edition as AGPL-3.0.
+Preserve source notices, this attribution and the complete license text when
+redistributing. If you modify AGPL-covered software and offer it to users over
+a network, comply with its corresponding-source requirements.
+
+Third-party packages, fonts and assets may have additional license terms.
+The root upstream license and README identify the open-source repository as
+AGPL-3.0. The server package retains legacy "UNLICENSED" package metadata and
+an EE directory name; no separate restrictive license or exception was found
+in this snapshot. Those labels are recorded as metadata inconsistencies, not
+assumed to create a proprietary license. Preserve the root license and review
+third-party dependency/asset licenses with each public release.
+
+FreeBooks modifications are distributed as part of this AGPL-covered work.
+Modification dates for the alpha packaging and configurable owner setup:
+October 4–5, 2026.

@@ -1,0 +1,62 @@
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import '@/style/pages/SaleInvoice/List.scss';
+import { InvoicesActionsBar } from './InvoicesActionsBar';
+import { InvoicesDataTable } from './InvoicesDataTable';
+import { InvoicesListDialogs } from './InvoicesListDialogs';
+import { InvoicesListDrawers } from './InvoicesListDrawers';
+import { InvoicesListProvider } from './InvoicesListProvider';
+import { withInvoiceActions } from './withInvoiceActions';
+import { withInvoices } from './withInvoices';
+import type { WithInvoiceActionsProps } from './withInvoiceActions';
+import type { WithInvoicesProps } from './withInvoices';
+import { DashboardPageContent } from '@/components';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { transformTableStateToQuery } from '@/utils';
+
+interface InvoicesListProps
+  extends Pick<
+      WithInvoicesProps,
+      'invoicesTableState' | 'invoicesTableStateChanged'
+    >,
+    WithInvoiceActionsProps {}
+
+function InvoicesListInner({
+  invoicesTableState,
+  invoicesTableStateChanged,
+  resetInvoicesTableState,
+  resetInvoicesSelectedRows,
+}: InvoicesListProps) {
+  React.useEffect(
+    () => () => {
+      resetInvoicesTableState();
+      resetInvoicesSelectedRows();
+    },
+    [resetInvoicesSelectedRows, resetInvoicesTableState],
+  );
+
+  return (
+    <InvoicesListProvider
+      query={transformTableStateToQuery(invoicesTableState)}
+      tableStateChanged={invoicesTableStateChanged}
+    >
+      <InvoicesActionsBar />
+      <InvoicesListDrawers />
+      <InvoicesListDialogs />
+
+      <DashboardPageContent>
+        <InvoicesDataTable />
+      </DashboardPageContent>
+    </InvoicesListProvider>
+  );
+}
+
+export const InvoicesList = FF.pipe(
+  InvoicesListInner,
+  withAlertActions,
+  withInvoiceActions,
+  withInvoices(({ invoicesTableState, invoicesTableStateChanged }) => ({
+    invoicesTableState,
+    invoicesTableStateChanged,
+  })),
+);

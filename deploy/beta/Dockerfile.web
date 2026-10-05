@@ -1,0 +1,18 @@
+FROM node:24-bookworm-slim AS build
+WORKDIR /source
+ENV HUSKY=0
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/* && npm install -g pnpm@9.1.2
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml lerna.json ./
+COPY packages/server/package.json ./packages/server/package.json
+COPY packages/webapp/package.json ./packages/webapp/package.json
+COPY shared/bigcapital-utils/package.json ./shared/bigcapital-utils/package.json
+COPY shared/sdk-ts/package.json ./shared/sdk-ts/package.json
+COPY shared/email-components/package.json ./shared/email-components/package.json
+COPY shared/pdf-templates/package.json ./shared/pdf-templates/package.json
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm --filter @bigcapital/utils build && pnpm --filter @bigcapital/sdk-ts build && pnpm --filter @bigcapital/email-components build && pnpm --filter @bigcapital/pdf-templates build && pnpm --filter @bigcapital/webapp build
+FROM nginx:1.28-alpine
+COPY --from=build /source/packages/webapp/dist /usr/share/nginx/html
+COPY deploy/beta/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80

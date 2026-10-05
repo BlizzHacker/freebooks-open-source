@@ -1,0 +1,118 @@
+
+.pagination{
+  display: flex;
+  padding: 20px 14px;
+  font-size: 13px;
+
+  .bp4-button{
+    background: transparent;
+    padding: 5px;
+  }
+
+  &__item{
+    min-width: 24px;
+    min-height: 24px;
+
+    &:not([class*="bp4-intent-"]){
+      color: #666666; 
+      border-radius: 5px;
+
+      &:hover{
+        background-color: #E6EFFB;
+      }
+    }
+
+    .bp4-icon{
+      margin-right: 4px;
+      color: #666666;
+    }
+
+    .pagination .pagination__buttons-group .bp4-button-group &{
+      border-radius: 5px;
+    }
+    &--next,
+    &--previous{
+
+      &.bp4-button{
+        padding-left: 10px;
+        padding-right: 10px;
+
+        .bp4-icon {
+
+          [dir="rtl"] & {
+            transform: scale(-1);
+          }
+        }
+
+      }
+    }
+
+    &.is-active{
+      &.bp4-intent-primary:disabled,
+      &.bp4-intent-primary.bp4-disabled{
+        background-color: #E6EFFB;
+      }
+
+      &:not([class*="bp4-intent-"]) {
+      }
+      .bp4-button-text{        
+        color: #000;
+      }
+    }
+
+    &--next{
+
+      .bp4-icon{
+        order: 1;
+        margin-right: 0;
+        margin-left: 4px;
+      }
+    }
+  }
+
+  &__info{
+    color: #888;
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__controls{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+
+    .bp4-html-select{
+      margin-left: 6px;
+
+      select{
+        height: 24px;
+        width: auto;
+        padding: 0;
+        padding-right: 0px;
+        border: 1px solid #e8e8e8;
+        font-size: 13px;
+        border-radius: 3px;
+        color: #666;
+        padding-right: 14px;
+        padding-left: 8px;
+      }
+
+      &::after{
+        border-left-width: 3px;
+        border-right-width: 3px;
+        border-top-width: 4px;
+        margin-right: 6px;
+      }
+    } 
+  }
+
+  &__goto-control{
+    display: none;
+  }
+
+  &__pagesize-control{
+    margin-left: 12px;
+    color: #888;
+  }
+}

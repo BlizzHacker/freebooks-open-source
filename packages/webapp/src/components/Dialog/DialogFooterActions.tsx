@@ -1,0 +1,43 @@
+// @ts-nocheck
+import { Classes } from '@blueprintjs/core';
+import React from 'react';
+import styled from 'styled-components';
+
+/**
+ * Dialog footer actions.
+ * @returns {React.JSX}
+ */
+export function DialogFooterActions({ alignment = 'right', children }) {
+  return (
+    <DialogFooterActionsRoot
+      className={Classes.DIALOG_FOOTER_ACTIONS}
+      alignment={alignment}
+    >
+      {children}
+    </DialogFooterActionsRoot>
+  );
+}
+
+/**
+ * Dialog footer.
+ * @returns {React.JSX}
+ */
+export function DialogFooter({ children }) {
+  return (
+    <DialogFooterRoot className={Classes.DIALOG_FOOTER}>
+      {children}
+    </DialogFooterRoot>
+  );
+}
+
+const DialogFooterRoot = styled.div``;
+
+const DialogFooterActionsRoot = styled.div`
+  ${(props) =>
+    props.alignment === 'right' ? 'margin-left: auto;' : 'margin-right: auto;'};
+
+  .bp4-button {
+    margin-left: 5px;
+    margin-left: 5px;
+  }
+`;

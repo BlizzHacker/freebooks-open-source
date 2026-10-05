@@ -1,0 +1,65 @@
+// @ts-nocheck
+import { Intent, Menu } from '@blueprintjs/core';
+import React from 'react';
+import { useIsSidebarMenuItemActive } from './hooks';
+import { MenuItem, MenuItemLabel } from '@/components';
+import { ISidebarMenuItemType } from '@/containers/Dashboard/Sidebar/interfaces';
+
+/**
+ * Sidebar menu item.
+ * @returns {JSX.Element}
+ */
+function SidebarMenuItem({ item, index }) {
+  // Detarmine whether the item is active.
+  const isActive = useIsSidebarMenuItemActive(item);
+
+  return (
+    <MenuItem
+      key={index}
+      text={item.text}
+      icon={item.icon}
+      className={item.className}
+      disabled={item.disabled}
+      dropdownType={item.dropdownType || 'collapse'}
+      onClick={item.onClick}
+      active={isActive}
+      intent={Intent.NONE}
+    />
+  );
+}
+
+SidebarMenuItem.ItemTypes = [
+  ISidebarMenuItemType.Link,
+  ISidebarMenuItemType.Overlay,
+  ISidebarMenuItemType.Dialog,
+];
+
+/**
+ * Detarmines which sidebar menu item type should display.
+ * @returns {JSX.Element}
+ */
+function SidebarMenuItemComposer({ item, index }) {
+  // Link item type.
+  return SidebarMenuItem.ItemTypes.indexOf(item.type) !== -1 ? (
+    <SidebarMenuItem item={item} index={index} />
+  ) : // Group item type.
+  item.type === ISidebarMenuItemType.Group ? (
+    <MenuItemLabel text={item.text} />
+  ) : null;
+}
+
+/**
+ * Sidebar menu.
+ * @returns {JSX.Element}
+ */
+export function SidebarMenu({ menu }) {
+  return (
+    <div>
+      <Menu className="sidebar-menu">
+        {menu.map((item, index) => (
+          <SidebarMenuItemComposer key={index} index={index} item={item} />
+        ))}
+      </Menu>
+    </div>
+  );
+}

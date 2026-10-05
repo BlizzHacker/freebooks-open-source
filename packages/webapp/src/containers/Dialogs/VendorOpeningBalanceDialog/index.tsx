@@ -1,0 +1,44 @@
+import * as FF from 'fp-ts/function';
+import { lazy } from 'react';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
+
+const VendorOpeningBalanceDialogContent = lazy(() =>
+  import('./VendorOpeningBalanceDialogContent').then((m) => ({
+    default: m.VendorOpeningBalanceDialogContent,
+  })),
+);
+
+interface VendorOpeningBalanceDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
+
+/**
+ * Vendor Opening balance dialog.
+ */
+function VendorOpeningBalanceDialog({
+  dialogName,
+  payload,
+  isOpen,
+}: VendorOpeningBalanceDialogProps) {
+  const vendorId = (payload.vendorId as number | undefined) ?? undefined;
+  return (
+    <Dialog
+      name={dialogName}
+      title={<T id={'vendor_opening_balance.label'} />}
+      isOpen={isOpen}
+      canEscapeJeyClose={true}
+      autoFocus={true}
+      className={'dialog--vendor-opening-balance'}
+    >
+      <DialogSuspense>
+        <VendorOpeningBalanceDialogContent
+          vendorId={vendorId}
+          dialogName={dialogName}
+        />
+      </DialogSuspense>
+    </Dialog>
+  );
+}
+export const index = FF.pipe(VendorOpeningBalanceDialog, withDialogRedux());
