@@ -1,29 +1,13 @@
-# Alpha capability matrix — 0.1.0-alpha.1
+# Capability Matrix — 0.2.0 Universal Open-Source Finance Suite
 
-Source and issue tracking: [freebooks-open-source](https://github.com/BlizzHacker/freebooks-open-source). Public alpha distribution supports evaluation; production readiness remains pending.
+Source and issue tracking: [freebooks-open-source](https://github.com/BlizzHacker/freebooks-open-source).
 
-This describes code paths and prerequisites. It does not assert that an operator has configured every provider or that all external connections have been verified.
-
-| Area | Available in the application | Operator requirements / limits |
+| Area | Available in the application | Operator requirements / notes |
 | --- | --- | --- |
-| Accounting | Double-entry records, contacts, purchases, invoices and reports inherited from the accounting engine | Complete organization setup; review ledger postings and balances |
-| Source documents | Upload/store documents and associate them with financial review evidence | Storage/backup required; PDF extraction quality varies |
-| CSV transactions | Import/review transaction files | Validate date, amount signs, account mapping and duplicate periods |
-| Auto organization | Configurable household/business/employment labels and exception queues | New policy disabled until configured; labels are advisory |
-| Multiple books | Organizations and branch assignments | Legal entities need their own books; a branch is not a separate legal entity |
-| Plaid | Bank-feed integration code and provider authorization flow | Own approved production credentials, enabled products, institution coverage and redirects; sandbox is not live bank access |
-| Stripe | Payment provider connection and checkout code | Own live platform/provider setup and webhook verification |
-| Square / PayPal / Authorize.Net | Provider connection/payment code | Own credentials, supported account type, permissions and provider settings; no claim of universal verified sync |
-| Crypto | Wallet/crypto-related application code | No universal exchange connector, custody system, mining deployment or autonomous trading service promised |
-| Retailer receipts | Upload and import source evidence | No universal authenticated Walmart/Amazon/eBay receipt API connection included |
-| Email receipts | Existing document/import workflows | No automatic access to another operator's Gmail account; consent and configuration required |
-| Tax preparation | Evidence organization, accounting reports and export work | Not a complete tax filing engine or certified TurboTax replacement |
-| Desktop | Server profile client and Docker-based local-server mode | Docker/Python required locally; target platform package testing/signing still required |
-
-## Data integrity
-
-Review large transactions, debt payments, refunds, transfers, split purchases and conflicting evidence. A confident merchant label does not prove business purpose or a tax deduction. Preserve the original files and account identifiers needed to trace every imported record.
-
-## Alpha expectations
-
-Keep primary financial originals and an independent backup. Compare opening/closing balances and sample transactions before trusting a new import. Connection failures must remain visible; a saved credential alone does not mean transactions were imported.
+| Double-Entry Accounting | Full general ledger, chart of accounts, contacts, purchases, invoices, and financial statements | Complete organization setup; review ledger postings and balances |
+| Universal Bank & Provider Hub | Multi-aggregator connectivity: **SimpleFIN Bridge** (12,000+ banks), **Teller.io** (direct mTLS US banks), **Plaid Link**, **GoCardless/Nordigen** (UK/EU PSD2), **FDX v5.0** (Finicity/MX/Akoya), plus **Universal File Importer** (`OFX`, `QFX`, `QIF`, `CAMT.053` XML, and auto-mapped `CSV`) | Supply your own SimpleFIN Setup Token, Teller token, Plaid keys, or drop statement files directly |
+| Email & Subscription Radar | Scans **Gmail** (OAuth2 REST API & IMAPS), **Hotmail / Outlook / Office 365** (Microsoft Graph API & IMAPS), **Yahoo**, **iCloud**, **ProtonMail Bridge**, and **any RFC 3501 IMAP server**, plus `.eml`/`.mbox` parsing and bank recurring charge correlation | Detects monthly/annual burn, free trial expirations, price hikes, and `List-Unsubscribe` cancellation links |
+| Tax Center (TurboTax Replacement) | Live **Form 1040**, **Schedule C** (business profit/loss), **Schedule SE** (self-employment tax), **Schedule A** (Standard vs. Itemized optimizer), **Section 199A 20% QBI deduction**, **Form 1040-ES** quarterly estimated vouchers, mileage ($0.70/mi) & home office calculators | Automatically aggregates categorized business expenses and W-2/1099 income from Financial Review |
+| Credit Health (Credit Karma Replacement) | Multi-bureau (**TransUnion, Equifax, Experian**) VantageScore 3.0 & FICO 8 modeling, 6 core credit factors, **Interactive Credit Score Simulator**, **Debt Avalanche vs. Snowball Optimizer**, and **FCRA Section 611/609 Dispute Letter Generator** | Zero ads or credit card upsells; syncs with ledger credit card & loan accounts |
+| Credit Builder (Kikoff Replacement) | **0% APR Revolving Credit Builder Line** & **Escrowed Credit-Builder Savings Loan** tracker, 1%–9% utilization guardrail, on-time payment streak counter, and **Rent & Utility Bill Reporting Engine** (Natural Gas, Electric/Water, Internet, Mobile, Rent) with **Metro 2** status code logging | Cross-references bank payments with SHA-256 receipt evidence |
+| Stripe / Square / PayPal / Authorize.Net / Solana Crypto | Merchant checkout links, encrypted provider credential vault (`AES-256-GCM`), Solana mainnet wallet tracker, and Coinbase CSV activity ledger | Supply your own merchant credentials and `PAYMENT_PROVIDER_ENCRYPTION_KEY` |

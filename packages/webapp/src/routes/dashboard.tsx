@@ -1258,6 +1258,52 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: '/email-subscriptions',
+    component: lazy(() =>
+      import('@/containers/EmailSubscriptions/EmailSubscriptionsPage').then(
+        (m) => ({
+          default: m.EmailSubscriptionsPage,
+        }),
+      ),
+    ),
+    pageTitle: 'Email & Subscriptions',
+    breadcrumb: 'Email & Subscriptions',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/tax-center',
+    component: lazy(() =>
+      import('@/containers/TaxCenter/TaxCenterPage').then((m) => ({
+        default: m.TaxCenterPage,
+      })),
+    ),
+    pageTitle: 'Tax Center (1040 / Schedule C)',
+    breadcrumb: 'Tax Center',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/credit-health',
+    component: lazy(() =>
+      import('@/containers/CreditHealth/CreditHealthPage').then((m) => ({
+        default: m.CreditHealthPage,
+      })),
+    ),
+    pageTitle: 'Credit Health & Simulator',
+    breadcrumb: 'Credit Health',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/credit-builder',
+    component: lazy(() =>
+      import('@/containers/CreditBuilder/CreditBuilderPage').then((m) => ({
+        default: m.CreditBuilderPage,
+      })),
+    ),
+    pageTitle: 'Credit Builder & Rent Reporting',
+    breadcrumb: 'Credit Builder',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: '/crypto-wallets',
     component: lazy(() =>
       import('@/containers/CryptoWallets/CryptoWalletsPage').then((m) => ({

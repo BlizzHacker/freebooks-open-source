@@ -67,6 +67,11 @@ import { BankingTransactionsRegonizeModule } from '../BankingTranasctionsRegoniz
 import { BankingMatchingModule } from '../BankingMatching/BankingMatching.module';
 import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 import { FinancialReviewModule } from '../FinancialReview/FinancialReview.module';
+import { EmailSubscriptionsModule } from '../EmailSubscriptions/EmailSubscriptions.module';
+import { UniversalBankingModule } from '../UniversalBanking/UniversalBanking.module';
+import { TaxCenterModule } from '../TaxCenter/TaxCenter.module';
+import { CreditHealthModule } from '../CreditHealth/CreditHealth.module';
+import { CreditBuilderModule } from '../CreditBuilder/CreditBuilder.module';
 import { TransactionsLockingModule } from '../TransactionsLocking/TransactionsLocking.module';
 import { SettingsModule } from '../Settings/Settings.module';
 import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
@@ -233,6 +238,11 @@ import { AppThrottleModule } from './AppThrottle.module';
     BankingTransactionsRegonizeModule,
     BankingTransactionsModule,
     FinancialReviewModule,
+    EmailSubscriptionsModule,
+    UniversalBankingModule,
+    TaxCenterModule,
+    CreditHealthModule,
+    CreditBuilderModule,
     BankingMatchingModule,
     BankingPlaidModule,
     CryptoWalletsModule,
